@@ -1,0 +1,9 @@
+{
+    "files.associations": {
+        "ostream": "cpp"
+    },
+    //clang-format settings
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true,
+    "C_Cpp.clang_format_fallbackStyle": "{ BasedOnStyle: Google, BreakBeforeBraces: Linux, PointerAlignment: Left}"
+}

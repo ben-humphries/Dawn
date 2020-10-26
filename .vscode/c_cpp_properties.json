@@ -5,8 +5,7 @@
             "includePath": [
                 "${workspaceFolder}/**"
             ],
-            "defines": [
-            ],
+            "defines": [],
             "windowsSdkVersion": "10.0.17763.0",
             "compilerPath": "C:/MinGW64/bin/g++.exe",
             "cStandard": "c17",

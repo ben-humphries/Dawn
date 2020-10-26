@@ -1,37 +1,43 @@
 #include <iostream>
 
 #define GLEW_STATIC
-#include "GL/glew.h"
+#include <string>
 
+#include "GL/glew.h"
 #include "GLFW/glfw3.h"
 
-int main() {
+int main()
+{
+  glfwInit();
 
+  // Create GLFW Window
+  GLFWwindow* window =
+      glfwCreateWindow(800, 600, "Dawn Engine App", NULL, NULL);
+  if (window == NULL) {
+    std::cout << "Failed to create GLFW window" << std::endl;
+    glfwTerminate();
+    return -1;
+  }
+  glfwMakeContextCurrent(window);
 
+  // Initialize GLEW
+  GLenum err = glewInit();
+  if (GLEW_OK != err) {
+    std::cout << "Failed to initialize GLEW" << std::endl;
+    return -1;
+  }
 
-    glfwInit();
+  glViewport(0, 0, 800, 600);
 
-    //Create GLFW Window
-    GLFWwindow * window = glfwCreateWindow(800, 600, "Dawn Engine App", NULL, NULL);
-    if (window == NULL) {
-        std::cout << "Failed to create GLFW window" << std::endl;
-        glfwTerminate();
-        return -1;
-    }
-    glfwMakeContextCurrent(window);
+  // Main Event Loop
+  while (!glfwWindowShouldClose(window)) {
+    glClearColor(1.0f, 0.7, 0.1f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
 
-    //Initialize GLEW
-    GLenum err = glewInit();
-    if (GLEW_OK != err) {
-        std::cout << "Failed to initialize GLEW" << std::endl;
-        return -1;
-    }
+    glfwSwapBuffers(window);
+    glfwPollEvents();
+  }
 
-    //Main Event Loop
-    while (!glfwWindowShouldClose(window)) {
-        glfwSwapBuffers(window);
-        glfwPollEvents();
-    }
-
-    return 0;
+  glfwTerminate();
+  return 0;
 }
