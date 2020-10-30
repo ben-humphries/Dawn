@@ -2,11 +2,11 @@
 
 int main()
 {
-  Application::Init();
+  Dawn::Application::Init();
 
-  Application::Start();
+  Dawn::Application::Start();
 
-  Application::Close();
+  Dawn::Application::Close();
 
   return 0;
 }

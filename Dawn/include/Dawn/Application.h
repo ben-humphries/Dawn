@@ -5,16 +5,19 @@
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
 
-class Application
+namespace Dawn
 {
- public:
-  static void Init();
+  class Application
+  {
+   public:
+    static void Init();
 
-  // Enters infinite event loop
-  static void Start();
+    // Enters infinite event loop
+    static void Start();
 
-  static void Close();
+    static void Close();
 
- private:
-  static GLFWwindow* window;
-};
+   private:
+    static GLFWwindow* window;
+  };
+}  // namespace Dawn

@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+namespace Dawn
+{
 GLFWwindow* Application::window;
 
 void Application::Init()
@@ -40,3 +42,4 @@ void Application::Start()
 }
 
 void Application::Close() { glfwTerminate(); }
+}  // namespace Dawn
