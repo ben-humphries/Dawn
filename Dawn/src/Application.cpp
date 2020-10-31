@@ -41,5 +41,8 @@ namespace Dawn
         }
     }
 
-    void Application::Close() { glfwTerminate(); }
+    void Application::Close()
+    {
+        glfwTerminate();
+    }
 }  // namespace Dawn
