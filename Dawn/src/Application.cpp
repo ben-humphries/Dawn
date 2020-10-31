@@ -6,22 +6,27 @@
 
 namespace Dawn
 {
-    void Application::EngineInit()
+    Application::Application()
     {
+        window = std::make_unique<Window>();
     }
 
-    void Application::EngineUpdate()
+    void Application::OnEngineUpdate()
+    {
+        window->clear();
+        window->display();
+    }
+
+    void Application::OnEngineClose()
     {
     }
 
     void Application::Start()
     {
-        EngineInit();
-        Init();
         // Main Event Loop
         while (true) {
-            EngineUpdate();
-            Update();
+            OnEngineUpdate();
+            OnUpdate();
         }
 
         Close();

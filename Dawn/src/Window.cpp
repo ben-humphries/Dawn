@@ -11,7 +11,7 @@ namespace Dawn
 {
     bool Window::initialized = false;
 
-    Window::Window(int width, int height, const char* name)
+    Window::Window(int width, int height, const std::string& name)
     {
         if (!Window::initialized) {
             if (glfwInit() == GLFW_FALSE) {
@@ -19,7 +19,7 @@ namespace Dawn
             }
         }
         // Create GLFW Window
-        m_window = glfwCreateWindow(width, height, name, NULL, NULL);
+        m_window = glfwCreateWindow(width, height, name.c_str(), NULL, NULL);
         if (m_window == NULL) {
             LOG("Failed to create GLFW window");
             glfwTerminate();

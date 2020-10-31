@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 #include "GLFW/glfw3.h"
 
 namespace Dawn
@@ -7,7 +9,8 @@ namespace Dawn
     class Window
     {
        public:
-        Window(int width, int height, const char* name);
+        Window(int width = 800, int height = 600,
+               const std::string& name = "Dawn App");
         ~Window();
 
         void display();

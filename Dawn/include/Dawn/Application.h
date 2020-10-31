@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include "Dawn/Window.h"
 
 namespace Dawn
@@ -7,16 +9,22 @@ namespace Dawn
     class Application
     {
        public:
-        // Derived class must implement these functions
-        virtual void Init() = 0;
-        virtual void Update() = 0;
+        Application();
 
-        // Calls init methods, and then enters game loop
+        // Derived class must implement these functions
+        virtual void OnUpdate() = 0;
+        virtual void OnClose() = 0;
+
+        // Enters game loop
         void Start();
+        // Called after game loop finishes
         void Close();
 
        private:
-        void EngineInit();
-        void EngineUpdate();
+        void OnEngineUpdate();
+        void OnEngineClose();
+
+       private:
+        std::unique_ptr<Window> window;
     };
 }  // namespace Dawn

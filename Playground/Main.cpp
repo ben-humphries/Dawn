@@ -4,26 +4,27 @@
 
 class Playground : public Dawn::Application
 {
-    Dawn::Window window = Dawn::Window(800, 600, "Playground");
-    Dawn::Window window2 = Dawn::Window(800, 600, "Playground2");
+    Dawn::Window win = Dawn::Window(200, 200, "this is a window");
 
-    void Init() override
+   public:
+    Playground()
     {
     }
 
-    void Update() override
+    void OnUpdate() override
     {
-        window.clear();
-        window.display();
+        win.clear();
+        win.display();
+    }
 
-        window2.clear();
-        window2.display();
+    void OnClose() override
+    {
     }
 };
 
 int main()
 {
-    Playground playground;
+    Playground playground = Playground();
     playground.Start();
 
     return 0;
