@@ -1,9 +1,6 @@
 #pragma once
 
-#define GLEW_STATIC
-
-#include "GL/glew.h"
-#include "GLFW/glfw3.h"
+#include "Dawn/Window.h"
 
 namespace Dawn
 {
@@ -21,7 +18,5 @@ namespace Dawn
        private:
         void EngineInit();
         void EngineUpdate();
-
-        GLFWwindow* m_window;
     };
 }  // namespace Dawn

@@ -1,6 +1,7 @@
 ##LIBRARY CONFIG
 set(SRC_FILES ${SRC_FILES}
     src/Application.cpp
+    src/Window.cpp
 )
 
 add_library(Dawn ${SRC_FILES})

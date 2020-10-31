@@ -1,16 +1,23 @@
 #include "Dawn/Application.h"
 #include "Dawn/Log.h"
+#include "Dawn/Window.h"
 
 class Playground : public Dawn::Application
 {
+    Dawn::Window window = Dawn::Window(800, 600, "Playground");
+    Dawn::Window window2 = Dawn::Window(800, 600, "Playground2");
+
     void Init() override
     {
-        DAWN_LOG("Starting Dawn Application...");
     }
 
     void Update() override
     {
-        DAWN_LOG("Logging from Playground update function");
+        window.clear();
+        window.display();
+
+        window2.clear();
+        window2.display();
     }
 };
 
