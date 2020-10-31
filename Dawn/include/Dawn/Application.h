@@ -10,14 +10,18 @@ namespace Dawn
     class Application
     {
        public:
-        static void Init();
+        // Derived class must implement these functions
+        virtual void Init() = 0;
+        virtual void Update() = 0;
 
-        // Enters infinite event loop
-        static void Start();
-
-        static void Close();
+        // Calls init methods, and then enters game loop
+        void Start();
+        void Close();
 
        private:
-        static GLFWwindow* window;
+        void EngineInit();
+        void EngineUpdate();
+
+        GLFWwindow* m_window;
     };
 }  // namespace Dawn

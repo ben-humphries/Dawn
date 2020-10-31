@@ -2,22 +2,24 @@
 
 #include <iostream>
 
+#include "Dawn/Log.h"
+
 namespace Dawn
 {
-    GLFWwindow* Application::window;
-
-    void Application::Init()
+    void Application::EngineInit()
     {
+        LOG("Logging from Dawn Engine init function");
+
         glfwInit();
 
         // Create GLFW Window
-        window = glfwCreateWindow(800, 600, "Dawn Engine App", NULL, NULL);
-        if (window == NULL) {
+        m_window = glfwCreateWindow(800, 600, "Dawn Engine App", NULL, NULL);
+        if (m_window == NULL) {
             std::cout << "Failed to create GLFW window" << std::endl;
             glfwTerminate();
             return;
         }
-        glfwMakeContextCurrent(window);
+        glfwMakeContextCurrent(m_window);
 
         // Initialize GLEW
         GLenum err = glewInit();
@@ -29,16 +31,27 @@ namespace Dawn
         glViewport(0, 0, 800, 600);
     }
 
+    void Application::EngineUpdate()
+    {
+        LOG("Logging from Dawn Engine update function");
+        glClearColor(1.0f, 0.7, 0.1f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        glfwSwapBuffers(m_window);
+        glfwPollEvents();
+    }
+
     void Application::Start()
     {
+        EngineInit();
+        Init();
         // Main Event Loop
-        while (!glfwWindowShouldClose(window)) {
-            glClearColor(1.0f, 0.7, 0.1f, 1.0f);
-            glClear(GL_COLOR_BUFFER_BIT);
-
-            glfwSwapBuffers(window);
-            glfwPollEvents();
+        while (!glfwWindowShouldClose(m_window)) {
+            EngineUpdate();
+            Update();
         }
+
+        Close();
     }
 
     void Application::Close()
