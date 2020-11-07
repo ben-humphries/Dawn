@@ -43,8 +43,45 @@ namespace Dawn
 
         //Set GLFW callbacks
 
+        //WindowClosed
         glfwSetWindowCloseCallback(m_window, [](GLFWwindow* w) {
             EventHandler::Submit(WindowClosedEvent());
+        });
+
+        //WindowResized
+        glfwSetWindowSizeCallback(m_window, [](GLFWwindow* w, int width, int height) {
+            EventHandler::Submit(WindowResizedEvent(width, height));
+        });
+
+        //WindowMoved
+        glfwSetWindowPosCallback(m_window, [](GLFWwindow* window, int x, int y) {
+            EventHandler::Submit(WindowMovedEvent(x, y));
+        });
+
+        //KeyPressed and KeyReleased
+        glfwSetKeyCallback(m_window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
+            if (action == GLFW_PRESS)
+                EventHandler::Submit(KeyPressedEvent(static_cast<KeyCode>(key)));
+            else if (action == GLFW_RELEASE)
+                EventHandler::Submit(KeyReleasedEvent(static_cast<KeyCode>(key)));
+        });
+
+        //MouseMoved
+        glfwSetCursorPosCallback(m_window, [](GLFWwindow* window, double x, double y) {
+            EventHandler::Submit(MouseMovedEvent(static_cast<float>(x), static_cast<float>(y)));
+        });
+
+        //MousePressed and MouseReleased
+        glfwSetMouseButtonCallback(m_window, [](GLFWwindow* window, int button, int action, int mods) {
+            if (action == GLFW_PRESS)
+                EventHandler::Submit(MousePressedEvent(static_cast<MouseCode>(button)));
+            else if (action == GLFW_RELEASE)
+                EventHandler::Submit(MouseReleasedEvent(static_cast<MouseCode>(button)));
+        });
+
+        //MouseScrolled
+        glfwSetScrollCallback(m_window, [](GLFWwindow* window, double x, double y) {
+            EventHandler::Submit(MouseScrolledEvent(static_cast<float>(x), static_cast<float>(y)));
         });
     }
 
