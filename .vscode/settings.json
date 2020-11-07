@@ -46,6 +46,6 @@
     //clang-format settings
     "editor.formatOnSave": true,
     "editor.formatOnType": false,
-    "C_Cpp.clang_format_fallbackStyle": "{ BasedOnStyle: Google, BreakBeforeBraces: Linux, PointerAlignment: Left, NamespaceIndentation: All, IndentWidth: 4, AllowShortFunctionsOnASingleLine: None}",
+    "C_Cpp.clang_format_fallbackStyle": "{ BasedOnStyle: Google, ColumnLimit: 0, BreakBeforeBraces: Linux, PointerAlignment: Left, NamespaceIndentation: All, IndentWidth: 4, AllowShortFunctionsOnASingleLine: None}",
     "cmake.configureOnOpen": false
 }

@@ -6,6 +6,7 @@
 #include "Dawn/Window.h"
 
 #include "Dawn/Log.h"
+#include "Dawn/Event.h"
 
 namespace Dawn
 {
@@ -39,12 +40,24 @@ namespace Dawn
         glViewport(0, 0, width, height);
 
         Window::initialized = true;
+
+        //Set GLFW callbacks
+
+        glfwSetWindowCloseCallback(m_window, [](GLFWwindow* w) {
+            EventHandler::Submit(WindowClosedEvent());
+        });
     }
 
     Window::~Window()
     {
         LOG("Destroying Window");
         glfwDestroyWindow(m_window);
+    }
+
+    void Window::onUpdate()
+    {
+        setCurrent();
+        glfwPollEvents();
     }
 
     void Window::setCurrent()

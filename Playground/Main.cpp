@@ -3,33 +3,29 @@
 #include "Dawn/Log.h"
 #include "Dawn/Window.h"
 
-void test(const Dawn::MouseMovedEvent& e)
+void test(const Dawn::Event& e)
 {
-    DAWN_LOG("testing!", e.getX());
-    e.getX();
+    DAWN_LOG(e.toString());
 }
 
 class Playground : public Dawn::Application
 {
-    Dawn::Window win = Dawn::Window(200, 200, "this is a window");
-
    public:
     Playground()
     {
         // TODO: change reference to Event to pointer, so that dynamic casting
         // works!
-        Dawn::EventHandler::Listen(Dawn::EventType::MouseMoved, test);
+        Dawn::EventHandler::Listen(Dawn::EventType::WindowClosed, test);
+        Dawn::EventHandler::Listen(Dawn::EventType::MouseMoved, [](const Dawn::Event& e) { DAWN_LOG("testing!"); });
 
-        Dawn::EventHandler::Submit(Dawn::MouseMovedEvent(100, 100));
+        //Dawn::EventHandler::Submit(Dawn::WindowClosedEvent());
     }
 
-    void OnUpdate() override
+    void onUpdate() override
     {
-        win.clear();
-        win.display();
     }
 
-    void OnClose() override
+    void onClose() override
     {
     }
 };
@@ -37,7 +33,7 @@ class Playground : public Dawn::Application
 int main()
 {
     Playground playground = Playground();
-    playground.Start();
+    playground.start();
 
     return 0;
 }

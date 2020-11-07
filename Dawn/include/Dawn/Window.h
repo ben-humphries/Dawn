@@ -13,6 +13,8 @@ namespace Dawn
                const std::string& name = "Dawn App");
         ~Window();
 
+        void onUpdate();
+
         void display();
 
         void clear();

@@ -3,6 +3,7 @@
 #include <memory>
 
 #include "Dawn/Window.h"
+#include "Dawn/Event.h"
 
 namespace Dawn
 {
@@ -12,19 +13,22 @@ namespace Dawn
         Application();
 
         // Derived class must implement these functions
-        virtual void OnUpdate() = 0;
-        virtual void OnClose() = 0;
+        virtual void onUpdate() = 0;
+        virtual void onClose() = 0;
 
         // Enters game loop
-        void Start();
+        void start();
         // Called after game loop finishes
-        void Close();
+        void close();
 
        private:
-        void OnEngineUpdate();
-        void OnEngineClose();
+        void onEngineUpdate();
+        void onEngineClose();
+
+        void onWindowClose(const Event& e);
 
        private:
         std::unique_ptr<Window> window;
+        bool running = true;
     };
 }  // namespace Dawn
