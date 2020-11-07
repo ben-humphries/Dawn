@@ -21,8 +21,10 @@ namespace Dawn
     void EventHandler::Submit(const Event& e)
     {
         auto result = m_eventMap.find(e.getType());
-        for (auto eventFunc : result->second) {
-            eventFunc(e);
+        if (result != m_eventMap.end()) {
+            for (auto eventFunc : result->second) {
+                eventFunc(e);
+            }
         }
     }
 }  // namespace Dawn

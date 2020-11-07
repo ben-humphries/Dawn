@@ -16,6 +16,8 @@ class Playground : public Dawn::Application
    public:
     Playground()
     {
+        // TODO: change reference to Event to pointer, so that dynamic casting
+        // works!
         Dawn::EventHandler::Listen(Dawn::EventType::MouseMoved, test);
 
         Dawn::EventHandler::Submit(Dawn::MouseMovedEvent(100, 100));
