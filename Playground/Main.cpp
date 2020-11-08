@@ -2,6 +2,7 @@
 #include "Dawn/Event.h"
 #include "Dawn/Log.h"
 #include "Dawn/Window.h"
+#include "Dawn/Input.h"
 
 void test(const Dawn::Event& e)
 {
@@ -36,6 +37,12 @@ class Playground : public Dawn::Application
 
     void onUpdate() override
     {
+        if (Dawn::Input::GetKeyDown(Dawn::KeyCode::B)) {
+            DAWN_LOG("B is being pressed");
+        }
+        if (Dawn::Input::GetMouseButtonDown(Dawn::MouseCode::Middle)) {
+            DAWN_LOG("Middle MB being pressed");
+        }
     }
 
     void onClose() override

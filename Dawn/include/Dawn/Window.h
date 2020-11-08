@@ -13,6 +13,11 @@ namespace Dawn
                const std::string& name = "Dawn App");
         ~Window();
 
+        void* getNativeWindow()
+        {
+            return (void*)m_window;
+        }
+
         void onUpdate();
 
         void display();

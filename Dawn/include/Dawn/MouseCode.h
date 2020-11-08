@@ -12,5 +12,9 @@ namespace Dawn
         Button5 = 5,
         Button6 = 6,
         Button7 = 7,
+
+        Left = Button0,
+        Right = Button1,
+        Middle = Button2
     };
 }

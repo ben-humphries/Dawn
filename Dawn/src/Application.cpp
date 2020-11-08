@@ -6,6 +6,8 @@
 
 namespace Dawn
 {
+    std::unique_ptr<Window> Application::window;
+
     void Application::onWindowClose(const Event& e)
     {
         running = false;

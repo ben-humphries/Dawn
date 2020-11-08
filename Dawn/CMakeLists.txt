@@ -3,6 +3,7 @@ set(SRC_FILES ${SRC_FILES}
     src/Application.cpp
     src/Window.cpp
     src/Event.cpp
+    src/Input.cpp
 )
 
 add_library(Dawn ${SRC_FILES})
