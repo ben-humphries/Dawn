@@ -1,7 +1,9 @@
 // clang-format off
-#define GLEW_STATIC
-#include "GL/glew.h"
+//#define GLEW_STATIC
+//#include "GL/glew.h"
 // clang-format on
+
+#include "glad/glad.h"
 
 #include "Dawn/Application.h"
 #include "Dawn/Event.h"

@@ -4,9 +4,7 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${workspaceFolder}/Dawn/include/Dawn",
-                "${workspaceFolder}/Dawn/libraries/glew-2.1.0/include",
-                "${workspaceFolder}/Dawn/libraries/glfw-3.3.2/include"
+                "${workspaceFolder}/Dawn/include/Dawn"
             ],
             "defines": [],
             "windowsSdkVersion": "10.0.17763.0",

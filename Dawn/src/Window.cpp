@@ -1,9 +1,11 @@
 // clang-format off
-#define GLEW_STATIC
-#include "GL/glew.h"
+//#define GLEW_STATIC
+//#include "GL/glew.h"
 // clang-format on
 
 #include "Dawn/Window.h"
+
+#include "glad/glad.h"
 
 #include "Dawn/Log.h"
 #include "Dawn/Event.h"
@@ -30,9 +32,15 @@ namespace Dawn
 
         if (!Window::initialized) {
             // Initialize GLEW
-            GLenum err = glewInit();
-            if (GLEW_OK != err) {
-                LOG("Failed to initialize GLEW");
+            // GLenum err = glewInit();
+            // if (GLEW_OK != err) {
+            //     LOG("Failed to initialize GLEW");
+            //     return;
+            // }
+
+            //Initialize Glad
+            if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+                LOG("Failed to initialize Glad");
                 return;
             }
         }

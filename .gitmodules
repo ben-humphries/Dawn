@@ -1,0 +1,3 @@
+[submodule "Dawn/libraries/glfw"]
+	path = Dawn/libraries/glfw
+	url = https://github.com/ben-humphries/glfw.git
