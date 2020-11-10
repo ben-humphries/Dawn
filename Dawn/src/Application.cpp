@@ -23,6 +23,10 @@ namespace Dawn
     {
         window->onUpdate();
         window->clear();
+    }
+
+    void Application::onEngineLateUpdate()
+    {
         window->display();
     }
 
@@ -36,6 +40,7 @@ namespace Dawn
         while (running) {
             onEngineUpdate();
             onUpdate();
+            onEngineLateUpdate();
         }
 
         close();

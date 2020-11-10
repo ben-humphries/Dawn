@@ -23,6 +23,7 @@ namespace Dawn
 
        private:
         void onEngineUpdate();
+        void onEngineLateUpdate();
         void onEngineClose();
 
         void onWindowClose(const Event& e);
