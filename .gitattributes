@@ -1,4 +1,1 @@
-Dawn/libraries linguist-vendored=true
-*.c linguist-vendored
-
-Dawn/libraries/glad/src/glad.c linguist-vendored
+Dawn/libraries/* linguist-vendored
