@@ -1,2 +1,4 @@
 Dawn/libraries linguist-vendored
 *.c linguist-vendored
+
+Dawn/libraries/glad/src/glad.c linguist-vendored
