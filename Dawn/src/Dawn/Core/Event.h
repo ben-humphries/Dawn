@@ -5,8 +5,8 @@
 #include <unordered_map>
 #include <vector>
 
-#include "Dawn/KeyCode.h"
-#include "Dawn/MouseCode.h"
+#include "KeyCode.h"
+#include "MouseCode.h"
 
 namespace Dawn
 {

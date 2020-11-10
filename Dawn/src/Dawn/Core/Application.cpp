@@ -1,8 +1,8 @@
-#include "Dawn/Application.h"
+#include "Application.h"
 
 #include <iostream>
 
-#include "Dawn/Log.h"
+#include "Log.h"
 
 namespace Dawn
 {

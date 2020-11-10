@@ -2,8 +2,8 @@
 
 #include <memory>
 
-#include "Dawn/Window.h"
-#include "Dawn/Event.h"
+#include "Window.h"
+#include "Event.h"
 
 namespace Dawn
 {

@@ -1,15 +1,6 @@
-// clang-format off
-//#define GLEW_STATIC
-//#include "GL/glew.h"
-// clang-format on
-
 #include "glad/glad.h"
 
-#include "Dawn/Application.h"
-#include "Dawn/Event.h"
-#include "Dawn/Log.h"
-#include "Dawn/Window.h"
-#include "Dawn/Input.h"
+#include "Dawn/Dawn.h"
 
 void test(const Dawn::Event& e)
 {

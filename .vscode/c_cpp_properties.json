@@ -4,7 +4,7 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${workspaceFolder}/Dawn/include/Dawn"
+                "${workspaceFolder}/Dawn/src"
             ],
             "defines": [],
             "windowsSdkVersion": "10.0.17763.0",

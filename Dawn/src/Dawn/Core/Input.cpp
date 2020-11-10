@@ -1,6 +1,6 @@
-#include "Dawn/Input.h"
+#include "Input.h"
 
-#include "Dawn/Application.h"
+#include "Application.h"
 
 namespace Dawn
 {

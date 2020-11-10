@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Dawn/KeyCode.h"
-#include "Dawn/MouseCode.h"
+#include "KeyCode.h"
+#include "MouseCode.h"
 
 namespace Dawn
 {
