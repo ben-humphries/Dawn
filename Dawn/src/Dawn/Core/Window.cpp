@@ -62,10 +62,13 @@ namespace Dawn
                 EventHandler::Submit(KeyReleasedEvent(static_cast<KeyCode>(key)));
         });
 
-        //MouseMoved
-        glfwSetCursorPosCallback(m_window, [](GLFWwindow* window, double x, double y) {
-            EventHandler::Submit(MouseMovedEvent(static_cast<float>(x), static_cast<float>(y)));
+        //CharTyped
+        glfwSetCharCallback(m_window, [](GLFWwindow* window, unsigned int codepoint) {
+            EventHandler::Submit(CharTypedEvent(static_cast<KeyCode>(codepoint)));
         });
+
+        //MouseMoved
+        glfwSetCursorPosCallback(m_window, [](GLFWwindow* window, double x, double y) { EventHandler::Submit(MouseMovedEvent(static_cast<float>(x), static_cast<float>(y))); });
 
         //MousePressed and MouseReleased
         glfwSetMouseButtonCallback(m_window, [](GLFWwindow* window, int button, int action, int mods) {

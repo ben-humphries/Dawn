@@ -30,8 +30,8 @@ namespace Dawn
 
        private:
         //This is static so that the Input class can access it. Possibly change in the future?
-        static std::unique_ptr<Window> window;
-        bool running = true;
+        static std::unique_ptr<Window> m_window;
+        bool m_running = true;
 
         friend class Input;
         friend class ImGuiApplication;

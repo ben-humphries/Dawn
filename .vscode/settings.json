@@ -41,7 +41,8 @@
         "cinttypes": "cpp",
         "typeinfo": "cpp",
         "functional": "cpp",
-        "iterator": "cpp"
+        "iterator": "cpp",
+        "cstring": "cpp"
     },
     //clang-format settings
     "editor.formatOnSave": true,

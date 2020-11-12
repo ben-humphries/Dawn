@@ -13,13 +13,14 @@ namespace Dawn
 //Member functions need to be bound to an object before being submitted to the EventHandler.
 #define BIND_EVENT_MEMBER_FN(func) std::bind(&func, this, std::placeholders::_1)
 
-    enum EventType {
+    enum class EventType {
         WindowClosed,
         WindowResized,
         WindowMoved,
 
         KeyPressed,
         KeyReleased,
+        CharTyped,
 
         MouseMoved,
         MousePressed,
@@ -78,7 +79,7 @@ std::string                                   \
         }
 
         EVENT_NO_PARAM_GET_STRING(WindowClosedEvent)
-        EVENT_GET_TYPE(WindowClosed)
+        EVENT_GET_TYPE(EventType::WindowClosed)
     };
 
     class WindowResizedEvent : public Event
@@ -106,7 +107,7 @@ std::string                                   \
             return s.str();
         }
 
-        EVENT_GET_TYPE(WindowResized)
+        EVENT_GET_TYPE(EventType::WindowResized)
 
        private:
         int m_width, m_height;
@@ -136,7 +137,7 @@ std::string                                   \
             return s.str();
         }
 
-        EVENT_GET_TYPE(WindowMoved)
+        EVENT_GET_TYPE(EventType::WindowMoved)
 
        private:
         int m_x, m_y;
@@ -164,7 +165,7 @@ std::string                                   \
             return s.str();
         }
 
-        EVENT_GET_TYPE(KeyPressed)
+        EVENT_GET_TYPE(EventType::KeyPressed)
 
        private:
         KeyCode m_keyCode;
@@ -190,7 +191,33 @@ std::string                                   \
             return s.str();
         }
 
-        EVENT_GET_TYPE(KeyReleased)
+        EVENT_GET_TYPE(EventType::KeyReleased)
+
+       private:
+        KeyCode m_keyCode;
+    };
+
+    class CharTypedEvent : public Event
+    {
+       public:
+        CharTypedEvent(KeyCode keyCode)
+            : m_keyCode(keyCode)
+        {
+        }
+
+        KeyCode getKeyCode() const
+        {
+            return m_keyCode;
+        }
+
+        std::string toString() const override
+        {
+            std::stringstream s;
+            s << "CharTypedEvent [KeyCode: " << static_cast<int32_t>(m_keyCode) << "]";
+            return s.str();
+        }
+
+        EVENT_GET_TYPE(EventType::CharTyped)
 
        private:
         KeyCode m_keyCode;
@@ -222,7 +249,7 @@ std::string                                   \
             return s.str();
         }
 
-        EVENT_GET_TYPE(MouseMoved)
+        EVENT_GET_TYPE(EventType::MouseMoved)
 
        private:
         float m_x, m_y;
@@ -248,7 +275,7 @@ std::string                                   \
             return s.str();
         }
 
-        EVENT_GET_TYPE(MousePressed)
+        EVENT_GET_TYPE(EventType::MousePressed)
 
        private:
         MouseCode m_mouseCode;
@@ -274,7 +301,7 @@ std::string                                   \
             return s.str();
         }
 
-        EVENT_GET_TYPE(MouseReleased)
+        EVENT_GET_TYPE(EventType::MouseReleased)
 
        private:
         MouseCode m_mouseCode;
@@ -305,7 +332,7 @@ std::string                                   \
             return s.str();
         }
 
-        EVENT_GET_TYPE(MouseScrolled)
+        EVENT_GET_TYPE(EventType::MouseScrolled)
 
        private:
         float m_x, m_y;

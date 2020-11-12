@@ -83,7 +83,13 @@ namespace Dawn
             UpdateKeyModifiers();
         }
 
-        //TODO: Implement CharacterCallback for typing
+        void ImGuiCharTypedCallback(const Event& e)
+        {
+            const CharTypedEvent& c_e = (const CharTypedEvent&)e;
+
+            ImGuiIO& io = ImGui::GetIO();
+            io.AddInputCharacter((unsigned int)c_e.getKeyCode());
+        }
 
        public:
         ImGuiApplication()
@@ -113,19 +119,20 @@ namespace Dawn
 
             ImGui_ImplOpenGL3_Init("#version 330 core");
 
-            EventHandler::Listen(MousePressed, BIND_EVENT_MEMBER_FN(ImGuiMousePressedCallback));
-            EventHandler::Listen(MouseReleased, BIND_EVENT_MEMBER_FN(ImGuiMouseReleasedCallback));
-            EventHandler::Listen(MouseMoved, BIND_EVENT_MEMBER_FN(ImGuiMouseMovedCallback));
-            EventHandler::Listen(MouseScrolled, BIND_EVENT_MEMBER_FN(ImGuiMouseScrolledCallback));
-            EventHandler::Listen(KeyPressed, BIND_EVENT_MEMBER_FN(ImGuiKeyPressedCallback));
-            EventHandler::Listen(KeyReleased, BIND_EVENT_MEMBER_FN(ImGuiKeyReleasedCallback));
+            EventHandler::Listen(EventType::MousePressed, BIND_EVENT_MEMBER_FN(ImGuiMousePressedCallback));
+            EventHandler::Listen(EventType::MouseReleased, BIND_EVENT_MEMBER_FN(ImGuiMouseReleasedCallback));
+            EventHandler::Listen(EventType::MouseMoved, BIND_EVENT_MEMBER_FN(ImGuiMouseMovedCallback));
+            EventHandler::Listen(EventType::MouseScrolled, BIND_EVENT_MEMBER_FN(ImGuiMouseScrolledCallback));
+            EventHandler::Listen(EventType::KeyPressed, BIND_EVENT_MEMBER_FN(ImGuiKeyPressedCallback));
+            EventHandler::Listen(EventType::KeyReleased, BIND_EVENT_MEMBER_FN(ImGuiKeyReleasedCallback));
+            EventHandler::Listen(EventType::CharTyped, BIND_EVENT_MEMBER_FN(ImGuiCharTypedCallback));
         }
 
         void onUpdate() override
         {
             ImGuiIO& io = ImGui::GetIO();
             io.DeltaTime = 1.0f / 60.0f;
-            io.DisplaySize = ImVec2(window->getWidth(), window->getHeight());
+            io.DisplaySize = ImVec2(m_window->getWidth(), m_window->getHeight());
 
             ImGui_ImplOpenGL3_NewFrame();
             ImGui::NewFrame();

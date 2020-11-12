@@ -6,28 +6,28 @@
 
 namespace Dawn
 {
-    std::unique_ptr<Window> Application::window;
+    std::unique_ptr<Window> Application::m_window;
 
     void Application::onWindowClose(const Event& e)
     {
-        running = false;
+        m_running = false;
     }
 
     Application::Application()
     {
-        window = std::make_unique<Window>();
-        EventHandler::Listen(WindowClosed, BIND_EVENT_MEMBER_FN(Application::onWindowClose));
+        m_window = std::make_unique<Window>();
+        EventHandler::Listen(EventType::WindowClosed, BIND_EVENT_MEMBER_FN(Application::onWindowClose));
     }
 
     void Application::onEngineUpdate()
     {
-        window->onUpdate();
-        window->clear();
+        m_window->onUpdate();
+        m_window->clear();
     }
 
     void Application::onEngineLateUpdate()
     {
-        window->display();
+        m_window->display();
     }
 
     void Application::onEngineClose()
@@ -37,7 +37,7 @@ namespace Dawn
     void Application::start()
     {
         // Main Event Loop
-        while (running) {
+        while (m_running) {
             onEngineUpdate();
             onUpdate();
             onEngineLateUpdate();
