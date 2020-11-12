@@ -1,6 +1,6 @@
-#include "glad/glad.h"
-
 #include "Dawn/Dawn.h"
+#include "Dawn/ImGui/ImGuiApplication.h"
+#include "glad/glad.h"
 
 void test(const Dawn::Event& e)
 {
@@ -20,9 +20,24 @@ class Playground : public Dawn::Application
    public:
     float vertices[18] =
         {
-            -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
-            0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-            0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
+            -0.5f,
+            -0.5f,
+            0.0f,
+            1.0f,
+            0.0f,
+            0.0f,
+            0.5f,
+            -0.5f,
+            0.0f,
+            0.0f,
+            1.0f,
+            0.0f,
+            0.0f,
+            0.5f,
+            0.0f,
+            0.0f,
+            0.0f,
+            1.0f,
         };
 
     unsigned int vao;
@@ -149,8 +164,11 @@ class Playground : public Dawn::Application
 
 int main()
 {
-    Playground playground = Playground();
-    playground.start();
+    //Playground playground = Playground();
+    //playground.start();
+
+    Dawn::ImGuiApplication app = Dawn::ImGuiApplication();
+    app.start();
 
     return 0;
 }

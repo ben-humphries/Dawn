@@ -4,6 +4,9 @@ set(SRC_FILES ${SRC_FILES}
     src/Dawn/Core/Window.cpp
     src/Dawn/Core/Event.cpp
     src/Dawn/Core/Input.cpp
+
+    src/Dawn/ImGui/imgui_impl_glfw.cpp
+    src/Dawn/ImGui/imgui_impl_opengl3.cpp
 )
 
 add_library(Dawn ${SRC_FILES})
@@ -15,6 +18,10 @@ target_link_libraries(Dawn glfw)
 ##GLAD##
 add_subdirectory(libraries/glad)
 target_link_libraries(Dawn glad)
+
+##IMGUI##
+add_subdirectory(libraries/imgui)
+target_link_libraries(Dawn ImGui)
 
 ##OPENGL##
 find_package(OpenGL REQUIRED)

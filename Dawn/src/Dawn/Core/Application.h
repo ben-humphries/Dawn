@@ -2,8 +2,8 @@
 
 #include <memory>
 
-#include "Window.h"
 #include "Event.h"
+#include "Window.h"
 
 namespace Dawn
 {
@@ -34,5 +34,6 @@ namespace Dawn
         bool running = true;
 
         friend class Input;
+        friend class ImGuiApplication;
     };
 }  // namespace Dawn

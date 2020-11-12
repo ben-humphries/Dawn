@@ -1,3 +1,6 @@
 [submodule "Dawn/libraries/glfw"]
 	path = Dawn/libraries/glfw
 	url = https://github.com/ben-humphries/glfw.git
+[submodule "Dawn/libraries/imgui"]
+	path = Dawn/libraries/imgui
+	url = https://github.com/ben-humphries/imgui.git
