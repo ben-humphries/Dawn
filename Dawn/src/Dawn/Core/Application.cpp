@@ -40,6 +40,7 @@ namespace Dawn
         while (m_running) {
             onEngineUpdate();
             onUpdate();
+            onLateUpdate();
             onEngineLateUpdate();
         }
 

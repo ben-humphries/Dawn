@@ -6,7 +6,13 @@
 #include "imgui_impl_opengl3.h"
 
 //TODO: A lot of magic numbers and strings in here. Needs to be cleaned up eventually
+//TODO: Consider, instead of inheritance, make this class a private member variable of Application, and if ImGui is enabled, call these functions, otherwise, don't.
+// This removes the need to call super functions (No triple inheritance).
 
+//When inheriting this class, make sure to call the super methods of any virtual functions you override.
+//i.e. if you override onUpdate, make sure to include the line
+//ImGuiApplication::onUpdate();
+//somewhere in your function.
 namespace Dawn
 {
     class ImGuiApplication : public Application
@@ -139,8 +145,10 @@ namespace Dawn
 
             static bool show = true;
             ImGui::ShowDemoWindow(&show);
+        }
 
-            //TODO: Add this is something like LateUpdate() that will allow inherited classes to render ImGui stuff
+        void onLateUpdate() override
+        {
             ImGui::Render();
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         }

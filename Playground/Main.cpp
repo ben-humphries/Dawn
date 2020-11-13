@@ -15,7 +15,7 @@ void test_keycodes(const Dawn::Event& e)
     }
 }
 
-class Playground : public Dawn::Application
+class Playground : public Dawn::ImGuiApplication
 {
    public:
     float vertices[18] =
@@ -142,6 +142,12 @@ class Playground : public Dawn::Application
 
     void onUpdate() override
     {
+        ImGuiApplication::onUpdate();
+
+        ImGui::Begin("Demo window");
+        ImGui::Button("Hello!");
+        ImGui::End();
+
         if (Dawn::Input::GetKeyDown(Dawn::KeyCode::B)) {
             DAWN_LOG("B is being pressed");
         }
@@ -159,16 +165,17 @@ class Playground : public Dawn::Application
 
     void onClose() override
     {
+        ImGuiApplication::onClose();
     }
 };
 
 int main()
 {
-    //Playground playground = Playground();
-    //playground.start();
+    Playground playground = Playground();
+    playground.start();
 
-    Dawn::ImGuiApplication app = Dawn::ImGuiApplication();
-    app.start();
+    //Dawn::ImGuiApplication app = Dawn::ImGuiApplication();
+    //app.start();
 
     return 0;
 }

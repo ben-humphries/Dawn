@@ -12,8 +12,9 @@ namespace Dawn
        public:
         Application();
 
-        // Derived class must implement these functions
+        // Derived class must implement pure virtual functions
         virtual void onUpdate() = 0;
+        virtual void onLateUpdate(){};
         virtual void onClose() = 0;
 
         // Enters game loop
