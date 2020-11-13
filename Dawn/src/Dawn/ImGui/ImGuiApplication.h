@@ -140,6 +140,7 @@ namespace Dawn
             static bool show = true;
             ImGui::ShowDemoWindow(&show);
 
+            //TODO: Add this is something like LateUpdate() that will allow inherited classes to render ImGui stuff
             ImGui::Render();
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         }
