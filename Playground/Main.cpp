@@ -1,5 +1,4 @@
 #include "Dawn/Dawn.h"
-#include "Dawn/ImGui/ImGuiApplication.h"
 #include "glad/glad.h"
 
 void test(const Dawn::Event& e)
@@ -15,7 +14,7 @@ void test_keycodes(const Dawn::Event& e)
     }
 }
 
-class Playground : public Dawn::ImGuiApplication
+class Playground : public Dawn::Application
 {
    public:
     float vertices[18] =
@@ -140,14 +139,18 @@ class Playground : public Dawn::ImGuiApplication
         glDeleteShader(fragment_shader);
     }
 
-    void onUpdate() override
+    void onImGuiUpdate() override
     {
-        ImGuiApplication::onUpdate();
-
         ImGui::Begin("Demo window");
+        ImGui::TextColored(ImVec4(1.0, 0.0, 0.0, 1.0), "testing!");
+        ImGui::TextWrapped("testetestsetset testest testing a gain this is more wrapped text let's see how this goes.");
+        ImGui::SetWindowSize(ImVec2(300, 100), ImGuiCond_FirstUseEver);
         ImGui::Button("Hello!");
         ImGui::End();
+    }
 
+    void onUpdate() override
+    {
         if (Dawn::Input::GetKeyDown(Dawn::KeyCode::B)) {
             DAWN_LOG("B is being pressed");
         }
@@ -165,7 +168,6 @@ class Playground : public Dawn::ImGuiApplication
 
     void onClose() override
     {
-        ImGuiApplication::onClose();
     }
 };
 

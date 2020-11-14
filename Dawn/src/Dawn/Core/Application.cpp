@@ -6,7 +6,8 @@
 
 namespace Dawn
 {
-    std::unique_ptr<Window> Application::m_window;
+    std::shared_ptr<Window> Application::m_window;
+    std::unique_ptr<DawnImGuiContext> Application::m_imguiContext;
 
     void Application::onWindowClose(const Event& e)
     {
@@ -15,8 +16,14 @@ namespace Dawn
 
     Application::Application()
     {
-        m_window = std::make_unique<Window>();
+        m_window = std::make_shared<Window>();
         EventHandler::Listen(EventType::WindowClosed, BIND_EVENT_MEMBER_FN(Application::onWindowClose));
+
+#ifdef DAWN_IMGUI
+        m_imguiContext = std::make_unique<DawnImGuiContext>(m_window);
+#else
+        m_imguiContext = nullptr;
+#endif
     }
 
     void Application::onEngineUpdate()
@@ -36,11 +43,14 @@ namespace Dawn
 
     void Application::start()
     {
-        // Main Event Loop
+        // Main Loop
         while (m_running) {
             onEngineUpdate();
+            if (m_imguiContext) m_imguiContext->onUpdate();
             onUpdate();
+            if (m_imguiContext) onImGuiUpdate();
             onLateUpdate();
+            if (m_imguiContext) m_imguiContext->onLateUpdate();
             onEngineLateUpdate();
         }
 
@@ -49,6 +59,7 @@ namespace Dawn
 
     void Application::close()
     {
+        if (m_imguiContext) m_imguiContext->onClose();
         glfwTerminate();
     }
 }  // namespace Dawn

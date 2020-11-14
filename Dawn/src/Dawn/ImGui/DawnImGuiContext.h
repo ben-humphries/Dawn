@@ -1,21 +1,17 @@
 #pragma once
 
-#include "../Core/Application.h"
 #include "../Core/KeyCode.h"
 #include "GLFW/glfw3.h"
 #include "imgui_impl_opengl3.h"
+#include "../Core/Event.h"
+#include "../Core/Window.h"
+#include <memory>
 
 //TODO: A lot of magic numbers and strings in here. Needs to be cleaned up eventually
-//TODO: Consider, instead of inheritance, make this class a private member variable of Application, and if ImGui is enabled, call these functions, otherwise, don't.
-// This removes the need to call super functions (No triple inheritance).
 
-//When inheriting this class, make sure to call the super methods of any virtual functions you override.
-//i.e. if you override onUpdate, make sure to include the line
-//ImGuiApplication::onUpdate();
-//somewhere in your function.
 namespace Dawn
 {
-    class ImGuiApplication : public Application
+    class DawnImGuiContext
     {
        private:
         void ImGuiMousePressedCallback(const Event& e)
@@ -98,7 +94,8 @@ namespace Dawn
         }
 
        public:
-        ImGuiApplication()
+        DawnImGuiContext(std::shared_ptr<Window> window)
+            : m_window(window)
         {
             ImGui::CreateContext();
             ImGuiIO& io = ImGui::GetIO();
@@ -134,11 +131,12 @@ namespace Dawn
             EventHandler::Listen(EventType::CharTyped, BIND_EVENT_MEMBER_FN(ImGuiCharTypedCallback));
         }
 
-        void onUpdate() override
+        void onUpdate()
         {
             ImGuiIO& io = ImGui::GetIO();
             io.DeltaTime = 1.0f / 60.0f;
             io.DisplaySize = ImVec2(m_window->getWidth(), m_window->getHeight());
+            io.FontGlobalScale = 1.5f;
 
             ImGui_ImplOpenGL3_NewFrame();
             ImGui::NewFrame();
@@ -147,16 +145,19 @@ namespace Dawn
             ImGui::ShowDemoWindow(&show);
         }
 
-        void onLateUpdate() override
+        void onLateUpdate()
         {
             ImGui::Render();
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         }
 
-        void onClose() override
+        void onClose()
         {
             ImGui_ImplOpenGL3_Shutdown();
         }
+
+       private:
+        std::shared_ptr<Window> m_window;
     };
 
 }  // namespace Dawn
