@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Dawn/Core/Application.h"
-#include "Dawn/Core/Event.h"
-#include "Dawn/Core/Log.h"
-#include "Dawn/Core/Window.h"
-#include "Dawn/Core/Input.h"
+#include "Core/Application.h"
+#include "Core/Event.h"
+#include "Core/Log.h"
+#include "Core/Window.h"
+#include "Core/Input.h"
