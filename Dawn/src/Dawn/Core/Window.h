@@ -5,6 +5,8 @@
 #define GLFW_INCLUDE_NONE
 #include "GLFW/glfw3.h"
 
+#include "Event.h"
+
 namespace Dawn
 {
     class Window
@@ -30,6 +32,7 @@ namespace Dawn
 
        private:
         void setCurrent();
+        void onResize(const Event& e);
 
         GLFWwindow* m_window;
 

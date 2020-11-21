@@ -3,11 +3,17 @@
 #include "glad/glad.h"
 
 #include "Log.h"
-#include "Event.h"
 
 namespace Dawn
 {
     bool Window::initialized = false;
+
+    void Window::onResize(const Event& e)
+    {
+        const WindowResizedEvent& w_e = (const WindowResizedEvent&)e;
+
+        glViewport(0, 0, w_e.getWidth(), w_e.getHeight());
+    }
 
     Window::Window(int width, int height, const std::string& name)
     {
@@ -82,6 +88,8 @@ namespace Dawn
         glfwSetScrollCallback(m_window, [](GLFWwindow* window, double x, double y) {
             EventHandler::Submit(MouseScrolledEvent(static_cast<float>(x), static_cast<float>(y)));
         });
+
+        EventHandler::Listen(EventType::WindowResized, BIND_EVENT_MEMBER_FN(Window::onResize));
     }
 
     Window::~Window()

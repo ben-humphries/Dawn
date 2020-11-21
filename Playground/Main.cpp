@@ -141,12 +141,16 @@ class Playground : public Dawn::Application
 
     void onImGuiUpdate() override
     {
+        static bool show = true;
+        ImGui::ShowDemoWindow(&show);
+
         ImGui::Begin("Demo window");
         ImGui::TextColored(ImVec4(1.0, 0.0, 0.0, 1.0), "testing!");
         ImGui::TextWrapped("testetestsetset testest testing a gain this is more wrapped text let's see how this goes.");
         ImGui::SetWindowSize(ImVec2(300, 100), ImGuiCond_FirstUseEver);
         ImGui::Button("Hello!");
         ImGui::End();
+
     }
 
     void onUpdate() override
