@@ -5,6 +5,10 @@ set(SRC_FILES ${SRC_FILES}
     src/Dawn/Core/Event.cpp
     src/Dawn/Core/Input.cpp
 
+    src/Dawn/Render/Renderer2D.cpp
+
+    src/Dawn/Math/Math.cpp
+
     src/Dawn/ImGui/imgui_impl_opengl3.cpp
 )
 

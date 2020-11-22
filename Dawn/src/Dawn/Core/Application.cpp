@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "Log.h"
+#include "Render/Renderer2D.h"
 
 namespace Dawn
 {
@@ -18,6 +19,8 @@ namespace Dawn
     {
         m_window = std::make_shared<Window>();
         EventHandler::Listen(EventType::WindowClosed, BIND_EVENT_MEMBER_FN(Application::onWindowClose));
+
+        Renderer2D::Init();
 
 #ifdef DAWN_IMGUI
         m_imguiContext = std::make_unique<DawnImGuiContext>(m_window);
@@ -39,6 +42,7 @@ namespace Dawn
 
     void Application::onEngineClose()
     {
+        Renderer2D::Terminate();
     }
 
     void Application::start()
