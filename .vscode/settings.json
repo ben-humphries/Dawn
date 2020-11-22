@@ -42,7 +42,11 @@
         "typeinfo": "cpp",
         "functional": "cpp",
         "iterator": "cpp",
-        "cstring": "cpp"
+        "cstring": "cpp",
+        "chrono": "cpp",
+        "codecvt": "cpp",
+        "ctime": "cpp",
+        "ratio": "cpp"
     },
     //clang-format settings
     "editor.formatOnSave": true,

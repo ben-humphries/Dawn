@@ -10,6 +10,8 @@ set(SRC_FILES ${SRC_FILES}
     src/Dawn/Math/Math.cpp
 
     src/Dawn/ImGui/imgui_impl_opengl3.cpp
+
+    src/Dawn/Util/Util.cpp
 )
 
 add_library(Dawn ${SRC_FILES})
@@ -25,6 +27,10 @@ target_link_libraries(Dawn glad)
 ##IMGUI##
 add_subdirectory(libraries/imgui)
 target_link_libraries(Dawn ImGui)
+
+##STB##
+add_subdirectory(libraries/stb)
+target_link_libraries(Dawn stb)
 
 ##OPENGL##
 find_package(OpenGL REQUIRED)

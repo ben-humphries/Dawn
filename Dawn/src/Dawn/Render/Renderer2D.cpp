@@ -3,6 +3,12 @@
 #include "Core/Log.h"
 #include "glad/glad.h"
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb/stb_image.h"
+
+//TEMP
+#include "Util/Util.h"
+
 namespace Dawn
 {
     struct Vertex {
@@ -33,6 +39,18 @@ namespace Dawn
 
     void Renderer2D::Init()
     {
+        //STB_IMAGE TEST
+        int w, h, numChannels;
+        unsigned char* data = stbi_load("test.png", &w, &h, &numChannels, 0);
+
+        if (!data) {
+            LOG("Loading texture failed");
+        } else {
+            LOG("Loading texture succeeded");
+        }
+
+        LOG("Current working directory: ", GetWorkingDirectory());
+
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
