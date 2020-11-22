@@ -2,7 +2,8 @@
 
 namespace Dawn
 {
-    //TODO: tell compiler never to insert padding so that types are consistent with ImGui/other libraries
+    //TODO: tell compiler never to insert padding so that types are consistent with ImGui/other libraries.
+    //      Note that this may have poor cache implications so more research needs to be done first.
     struct Vec2 {
         float x;
         float y;
@@ -53,15 +54,15 @@ namespace Dawn
 
         Mat4();
 
-        float Get(int x, int y);
+        float Get(int x, int y) const;
         void Set(int x, int y, float val);
         float* getPtr();
 
-        //TODO: Make these use references
-        Mat4 operator*(Mat4 m);
-        Vec4 operator*(Vec4 v);
+        Mat4 operator*(const Mat4& m) const;
+        Vec4 operator*(const Vec4& v) const;
     };
 
+    //TODO: Maybe put these functions in a Math namespace?
     float Radians(float degrees);
     float Mod(float f, float m);
 
@@ -80,7 +81,7 @@ namespace Dawn
     Mat4 GetScaleMatrix(const Vec3& v);
 
     Mat4 GetModelMatrix(
-        Mat4& translationMatrix,
-        Mat4& rotationMatrix,
-        Mat4& scaleMatrix);
+        const Mat4& translationMatrix,
+        const Mat4& rotationMatrix,
+        const Mat4& scaleMatrix);
 }

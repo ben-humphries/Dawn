@@ -182,7 +182,7 @@ namespace Dawn
         values[15] = 1;
     }
 
-    float Mat4::Get(int x, int y)
+    float Mat4::Get(int x, int y) const
     {
         return values[y + 4 * x];
     }
@@ -197,7 +197,7 @@ namespace Dawn
         return values;
     }
 
-    Mat4 Mat4::operator*(Mat4 m)
+    Mat4 Mat4::operator*(const Mat4& m) const
     {
         Mat4 f = Mat4();
 
@@ -215,7 +215,7 @@ namespace Dawn
         return f;
     }
 
-    Vec4 Mat4::operator*(Vec4 v)
+    Vec4 Mat4::operator*(const Vec4& v) const
     {
         float x = this->Get(0, 0) * v.x + this->Get(1, 0) * v.y + this->Get(2, 0) * v.z + this->Get(3, 0) * v.w;
         float y = this->Get(0, 1) * v.x + this->Get(1, 1) * v.y + this->Get(2, 1) * v.z + this->Get(3, 1) * v.w;
@@ -353,9 +353,9 @@ namespace Dawn
     }
 
     Mat4 GetModelMatrix(
-        Mat4& translation_matrix,
-        Mat4& rotation_matrix,
-        Mat4& scale_matrix)
+        const Mat4& translation_matrix,
+        const Mat4& rotation_matrix,
+        const Mat4& scale_matrix)
     {
         return translation_matrix * rotation_matrix * scale_matrix;
     }
