@@ -65,8 +65,10 @@ class Playground : public Dawn::Application
         //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
         Dawn::Renderer2D::StartFrame();
+
+        Dawn::Renderer2D::DrawQuad(Dawn::Vec3(-0.5, 0, 0), 0, Dawn::Vec3(0.5), quadColor);
         Dawn::Renderer2D::DrawQuad(Dawn::Vec3(0.5, 0, 0), quadRotation, Dawn::Vec3(0.5), quadColor);
-        // Dawn::Renderer2D::DrawQuad(Dawn::Vec3(-0.5), triangleColor);
+
         Dawn::Renderer2D::EndFrame();
     }
 

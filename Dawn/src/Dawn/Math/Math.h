@@ -57,6 +57,7 @@ namespace Dawn
         void Set(int x, int y, float val);
         float* getPtr();
 
+        //TODO: Make these use references
         Mat4 operator*(Mat4 m);
         Vec4 operator*(Vec4 v);
     };

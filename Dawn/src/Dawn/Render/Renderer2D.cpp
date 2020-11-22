@@ -1,7 +1,6 @@
 #include "Renderer2D.h"
 
 #include "Core/Log.h"
-
 #include "glad/glad.h"
 
 namespace Dawn
@@ -99,7 +98,7 @@ namespace Dawn
             indices[i + 4] = offset + 3;
             indices[i + 5] = offset + 0;
 
-            offset += 6;
+            offset += 4;
         }
 
         //Initialize array object
@@ -170,4 +169,4 @@ namespace Dawn
             currentVertexPtr++;
         }
     }
-}
+}  // namespace Dawn
