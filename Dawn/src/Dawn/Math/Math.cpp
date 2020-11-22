@@ -215,6 +215,16 @@ namespace Dawn
         return f;
     }
 
+    Vec4 Mat4::operator*(Vec4 v)
+    {
+        float x = this->Get(0, 0) * v.x + this->Get(1, 0) * v.y + this->Get(2, 0) * v.z + this->Get(3, 0) * v.w;
+        float y = this->Get(0, 1) * v.x + this->Get(1, 1) * v.y + this->Get(2, 1) * v.z + this->Get(3, 1) * v.w;
+        float z = this->Get(0, 2) * v.x + this->Get(1, 2) * v.y + this->Get(2, 2) * v.z + this->Get(3, 2) * v.w;
+        float w = this->Get(0, 3) * v.x + this->Get(1, 3) * v.y + this->Get(2, 3) * v.z + this->Get(3, 3) * v.w;
+
+        return Vec4(x, y, z, w);
+    }
+
     //UTIL FUNCTIONS//
 
     float Radians(float degrees)

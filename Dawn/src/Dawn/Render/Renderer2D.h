@@ -13,6 +13,6 @@ namespace Dawn
         static void StartFrame();
         static void EndFrame();
 
-        static void DrawQuad(Vec3 position, Vec4 color);
+        static void DrawQuad(Vec3 position, float rotation, Vec3 scale, Vec4 color);
     };
 }

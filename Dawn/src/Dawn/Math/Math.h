@@ -58,6 +58,7 @@ namespace Dawn
         float* getPtr();
 
         Mat4 operator*(Mat4 m);
+        Vec4 operator*(Vec4 v);
     };
 
     float Radians(float degrees);

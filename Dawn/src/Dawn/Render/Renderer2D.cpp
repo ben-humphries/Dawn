@@ -152,10 +152,18 @@ namespace Dawn
         glDrawElements(GL_TRIANGLES, MAX_INDICES, GL_UNSIGNED_INT, 0);
     }
 
-    void Renderer2D::DrawQuad(Vec3 position, Vec4 color)
+    void Renderer2D::DrawQuad(Vec3 position, float rotation, Vec3 scale, Vec4 color)
     {
+        Mat4 translationMatrix = GetTranslationMatrix(position);
+        Mat4 rotationMatrix = GetRotationMatrix(Vec3(0, 0, -1), rotation);
+        Mat4 scaleMatrix = GetScaleMatrix(scale);
+
+        Mat4 modelMatrix = GetModelMatrix(translationMatrix, rotationMatrix, scaleMatrix);
+
         for (int i = 0; i < 4; i++) {
-            currentVertexPtr->position = quadVertexPositions[i] + position;
+            Vec4 vPosition = Vec4(quadVertexPositions[i].x, quadVertexPositions[i].y, quadVertexPositions[i].z, 1);
+            vPosition = modelMatrix * vPosition;
+            currentVertexPtr->position = Vec3(vPosition.x, vPosition.y, vPosition.z);
             currentVertexPtr->color = color;
             currentVertexPtr->texCoord = Vec2(0, 0);
 

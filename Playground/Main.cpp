@@ -19,7 +19,8 @@ void test_keycodes(const Dawn::Event& e)
 class Playground : public Dawn::Application
 {
    public:
-    Dawn::Vec4 triangleColor = Dawn::Vec4(1, 0, 1, 1);
+    Dawn::Vec4 quadColor = Dawn::Vec4(1, 0, 1, 1);
+    float quadRotation = 0;
 
     Playground()
     {
@@ -43,7 +44,8 @@ class Playground : public Dawn::Application
         //ImGui::ShowDemoWindow(&show);
 
         ImGui::Begin("Demo window");
-        ImGui::ColorPicker4("triangle color", (float*)&triangleColor);
+        ImGui::ColorPicker4("triangle color", (float*)&quadColor);
+        ImGui::DragFloat("rotation", &quadRotation, 0.1f, 0.f, 6.28f, NULL, 1.f);
         ImGui::TextColored(ImVec4(1, 0, 0, 1), "testing!");
         ImGui::TextWrapped("testetestsetset testest testing a gain this is more wrapped text let's see how this goes.");
         ImGui::SetWindowSize(ImVec2(400, 900), ImGuiCond_FirstUseEver);
@@ -63,7 +65,7 @@ class Playground : public Dawn::Application
         //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
         Dawn::Renderer2D::StartFrame();
-        Dawn::Renderer2D::DrawQuad(Dawn::Vec3(0), triangleColor);
+        Dawn::Renderer2D::DrawQuad(Dawn::Vec3(0.5, 0, 0), quadRotation, Dawn::Vec3(0.5), quadColor);
         // Dawn::Renderer2D::DrawQuad(Dawn::Vec3(-0.5), triangleColor);
         Dawn::Renderer2D::EndFrame();
     }
