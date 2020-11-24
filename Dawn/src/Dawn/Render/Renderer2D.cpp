@@ -31,15 +31,20 @@ namespace Dawn
 
     uint32_t* indices;
 
+    Vec2 texCoords[4];
+
     Vec3 quadVertexPositions[4] = {
-        Vec3(-0.5f, -0.5f, 0.0f),
-        Vec3(0.5f, -0.5f, 0.0f),
         Vec3(0.5f, 0.5f, 0.0f),
+        Vec3(0.5f, -0.5f, 0.0f),
+        Vec3(-0.5f, -0.5f, 0.0f),
         Vec3(-0.5f, 0.5f, 0.0f)};
+
+    //TEMP
+    unsigned int texture;
 
     void Renderer2D::Init()
     {
-        //STB_IMAGE TEST
+        //TEXTURE TEST
         int w, h, numChannels;
         unsigned char* data = stbi_load("test.png", &w, &h, &numChannels, 0);
 
@@ -50,6 +55,15 @@ namespace Dawn
         }
 
         LOG("Current working directory: ", GetWorkingDirectory());
+
+        glGenTextures(1, &texture);
+        glBindTexture(GL_TEXTURE_2D, texture);
+
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+        stbi_image_free(data);
+        ////
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -65,19 +79,27 @@ namespace Dawn
             "layout (location = 2) in vec2 aTexCoord;\n"
 
             "out vec4 color;\n"
+            "out vec2 texCoord;\n"
+
             "void main()\n"
             "{\n"
             "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
             "   color = aColor;\n"
+            "   texCoord = aTexCoord;\n"
             "}\0";
 
         const char* fragmentShaderSource =
             "#version 330 core \n"
+
             "out vec4 FragColor;\n"
+
             "in vec4 color;\n"
+            "in vec2 texCoord;\n"
+
+            "uniform sampler2D inputTexture;\n"
             "void main()\n"
             "{\n"
-            "   FragColor = vec4(color);\n"
+            "   FragColor = color * texture(inputTexture, texCoord);\n"
             "}\0";
 
         unsigned int vertexShader;
@@ -110,14 +132,20 @@ namespace Dawn
         for (int i = 0; i < MAX_INDICES; i += 6) {
             indices[i + 0] = offset + 0;
             indices[i + 1] = offset + 1;
-            indices[i + 2] = offset + 2;
+            indices[i + 2] = offset + 3;
 
-            indices[i + 3] = offset + 2;
-            indices[i + 4] = offset + 3;
-            indices[i + 5] = offset + 0;
+            indices[i + 3] = offset + 1;
+            indices[i + 4] = offset + 2;
+            indices[i + 5] = offset + 3;
 
             offset += 4;
         }
+
+        //Initialize texCoords
+        texCoords[0] = Vec2(1.0f, 0.0f);
+        texCoords[1] = Vec2(1.0f, 1.0f);
+        texCoords[2] = Vec2(0.0f, 1.0f);
+        texCoords[3] = Vec2(0.0f, 0.0f);
 
         //Initialize array object
         glGenVertexArrays(1, &vao);
@@ -156,6 +184,8 @@ namespace Dawn
 
     void Renderer2D::EndFrame()
     {
+        glBindTexture(GL_TEXTURE_2D, texture);
+
         glBindVertexArray(vao);
 
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -182,7 +212,7 @@ namespace Dawn
             vPosition = modelMatrix * vPosition;
             currentVertexPtr->position = Vec3(vPosition.x, vPosition.y, vPosition.z);
             currentVertexPtr->color = color;
-            currentVertexPtr->texCoord = Vec2(0, 0);
+            currentVertexPtr->texCoord = texCoords[i];
 
             currentVertexPtr++;
         }
