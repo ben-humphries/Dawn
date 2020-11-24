@@ -3,11 +3,11 @@
 #include "Core/Log.h"
 #include "glad/glad.h"
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb/stb_image.h"
-
 //TEMP
 #include "Util/Util.h"
+
+#include "Render/Image.h"
+#include "Render/Texture.h"
 
 namespace Dawn
 {
@@ -21,10 +21,10 @@ namespace Dawn
     const uint32_t MAX_VERTICES = MAX_QUADS * 4;
     const uint32_t MAX_INDICES = MAX_QUADS * 6;
 
-    unsigned int vbo;
-    unsigned int vao;
-    unsigned int ebo;
-    unsigned int shaderProgram;
+    uint32_t vbo;
+    uint32_t vao;
+    uint32_t ebo;
+    uint32_t shaderProgram;
 
     Vertex* vertices;
     Vertex* currentVertexPtr = vertices;
@@ -40,30 +40,20 @@ namespace Dawn
         Vec3(-0.5f, 0.5f, 0.0f)};
 
     //TEMP
-    unsigned int texture;
+    Texture texture;
 
     void Renderer2D::Init()
     {
         //TEXTURE TEST
-        int w, h, numChannels;
-        unsigned char* data = stbi_load("test.png", &w, &h, &numChannels, 0);
-
-        if (!data) {
-            LOG("Loading texture failed");
-        } else {
-            LOG("Loading texture succeeded");
-        }
+        Image image = Image();
+        image.loadFromFile("test.png");
 
         LOG("Current working directory: ", GetWorkingDirectory());
 
-        glGenTextures(1, &texture);
-        glBindTexture(GL_TEXTURE_2D, texture);
+        //texture.loadFromImage(image);
+        texture.loadFromFile("test.png");
 
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-
-        stbi_image_free(data);
-        ////
+        ///////////////////////////////////////
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -184,7 +174,7 @@ namespace Dawn
 
     void Renderer2D::EndFrame()
     {
-        glBindTexture(GL_TEXTURE_2D, texture);
+        texture.bind();
 
         glBindVertexArray(vao);
 

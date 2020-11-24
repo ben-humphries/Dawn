@@ -66,7 +66,7 @@ class Playground : public Dawn::Application
 
         Dawn::Renderer2D::StartFrame();
 
-        Dawn::Renderer2D::DrawQuad(Dawn::Vec3(-0.5, 0, 0), 0, Dawn::Vec3(0.5), quadColor);
+        Dawn::Renderer2D::DrawQuad(Dawn::Vec3(-0.5, 0, 0), 0, Dawn::Vec3(0.5), Dawn::Vec4(1.0, 1.0, 1.0, 1.0));
         Dawn::Renderer2D::DrawQuad(Dawn::Vec3(0.5, 0, 0), quadRotation, Dawn::Vec3(0.5), quadColor);
 
         Dawn::Renderer2D::EndFrame();

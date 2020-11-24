@@ -6,6 +6,8 @@ set(SRC_FILES ${SRC_FILES}
     src/Dawn/Core/Input.cpp
 
     src/Dawn/Render/Renderer2D.cpp
+    src/Dawn/Render/Image.cpp
+    src/Dawn/Render/Texture.cpp
 
     src/Dawn/Math/Math.cpp
 
