@@ -41,6 +41,7 @@ namespace Dawn
 
     //TEMP
     Texture texture;
+    Texture texture2;
 
     void Renderer2D::Init()
     {
@@ -52,6 +53,7 @@ namespace Dawn
 
         //texture.loadFromImage(image);
         texture.loadFromFile("test.png");
+        texture2.loadFromFile("test2.png");
 
         ///////////////////////////////////////
 
