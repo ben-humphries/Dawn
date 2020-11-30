@@ -15,6 +15,8 @@ set(SRC_FILES ${SRC_FILES}
     src/Dawn/ImGui/imgui_impl_opengl3.cpp
 
     src/Dawn/Util/Util.cpp
+
+    src/Dawn/Debug/Profile.cpp
 )
 
 add_library(Dawn ${SRC_FILES})

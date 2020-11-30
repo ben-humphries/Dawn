@@ -46,55 +46,74 @@ class Playground : public Dawn::Application
 
     void onImGuiUpdate() override
     {
+        DAWN_PROFILE_FUNC();
+
         //static bool show = true;
         //ImGui::ShowDemoWindow(&show);
 
         ImGui::Begin("Demo window");
+        ImGui::SetWindowSize(ImVec2(400, 900), ImGuiCond_FirstUseEver);
+
         ImGui::ColorPicker4("triangle color", (float*)&quadColor);
         ImGui::DragFloat("rotation", &quadRotation, 0.1f, 0.f, 6.28f, NULL, 1.f);
         std::string fps = "FPS: " + std::to_string(1.0f / Dawn::Time::deltaTime);
         ImGui::TextColored(ImVec4(1, 0, 0, 1), fps.c_str());
-        ImGui::TextWrapped("testetestsetset testest testing a gain this is more wrapped text let's see how this goes.");
-        ImGui::SetWindowSize(ImVec2(400, 900), ImGuiCond_FirstUseEver);
-        ImGui::Button("Hello!");
+
+        for (auto scopeTime : Dawn::ProfileTimer::s_scopeTimes) {
+            std::string display = std::to_string(scopeTime.time) + "s || " + scopeTime.name;
+            ImGui::Text(display.c_str());
+        }
+        Dawn::ProfileTimer::s_scopeTimes.clear();
+
         ImGui::End();
     }
 
     void onUpdate() override
     {
-        if (Dawn::Input::GetKeyDown(Dawn::KeyCode::B)) {
-            DAWN_LOG("B is being pressed");
-        }
-        if (Dawn::Input::GetMouseButtonDown(Dawn::MouseCode::Middle)) {
-            DAWN_LOG("Middle MB being pressed");
+        DAWN_PROFILE_FUNC();
+
+        {
+            DAWN_PROFILE_SCOPE("check input");
+            if (Dawn::Input::GetKeyDown(Dawn::KeyCode::B)) {
+                DAWN_LOG("B is being pressed");
+            }
+            if (Dawn::Input::GetMouseButtonDown(Dawn::MouseCode::Middle)) {
+                DAWN_LOG("Middle MB being pressed");
+            }
         }
 
         //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-        Dawn::Renderer2D::StartFrame();
+        {
+            DAWN_PROFILE_SCOPE("render quads");
+            Dawn::Renderer2D::StartFrame();
 
-        Dawn::Renderer2D::DrawQuad(Dawn::Vec3(-0.5, 0, 0), 0, Dawn::Vec3(0.5), Dawn::Vec4(1.0, 1.0, 1.0, 1.0), &tex1);
-        Dawn::Renderer2D::DrawQuad(Dawn::Vec3(0.5, 0, 0), quadRotation, Dawn::Vec3(0.5), quadColor, &tex2);
-        Dawn::Renderer2D::DrawQuad(Dawn::Vec3(-0.5, -0.5, 0), 0, Dawn::Vec3(0.5), quadColor);
-
-        int quads = 0;
-        for (float x = -1.0; x < 1.0; x += 0.02) {
-            for (float y = -1.0; y < 1.0; y += 0.02) {
-                quads++;
-                Dawn::Texture* tex = nullptr;
-                if (quads % 2 == 0)
-                    tex = &tex1;
-                else {
-                    tex = &tex2;
-                }
-
-                Dawn::Renderer2D::DrawQuad(Dawn::Vec3(x, y, 0), quadRotation, Dawn::Vec3(0.02, 0.02, 1), quadColor * Dawn::Vec4((x + 1) / 2, (y + 1) / 2, 1.0, 1.0), tex);
-            }
+            Dawn::Renderer2D::DrawQuad(Dawn::Vec3(-0.5, 0, 0), 0, Dawn::Vec3(0.5), Dawn::Vec4(1.0, 1.0, 1.0, 1.0), &tex1);
+            Dawn::Renderer2D::DrawQuad(Dawn::Vec3(0.5, 0, 0), quadRotation, Dawn::Vec3(0.5), quadColor, &tex2);
+            Dawn::Renderer2D::DrawQuad(Dawn::Vec3(-0.5, -0.5, 0), 0, Dawn::Vec3(0.5), quadColor);
         }
+        // int quads = 0;
+        // for (float x = -1.0; x < 1.0; x += 0.02) {
+        //     for (float y = -1.0; y < 1.0; y += 0.02) {
+        //         quads++;
+        //         Dawn::Texture* tex = nullptr;
+        //         if (quads % 2 == 0)
+        //             tex = &tex1;
+        //         else {
+        //             tex = &tex2;
+        //         }
+
+        //         Dawn::Renderer2D::DrawQuad(Dawn::Vec3(x, y, 0), quadRotation, Dawn::Vec3(0.02, 0.02, 1), quadColor * Dawn::Vec4((x + 1) / 2, (y + 1) / 2, 1.0, 1.0), tex);
+        //     }
+        // }
 
         //DAWN_LOG(quads);
 
-        Dawn::Renderer2D::EndFrame();
+        {
+            DAWN_PROFILE_SCOPE("end frame");
+
+            Dawn::Renderer2D::EndFrame();
+        }
     }
 
     void onClose() override

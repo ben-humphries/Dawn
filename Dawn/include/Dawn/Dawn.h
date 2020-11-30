@@ -10,3 +10,6 @@
 #include "Math/Math.h"
 
 #include "Render/Renderer2D.h"
+
+//DEBUG
+#include "Debug/Profile.h"
