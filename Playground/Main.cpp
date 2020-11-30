@@ -22,6 +22,9 @@ class Playground : public Dawn::Application
     Dawn::Vec4 quadColor = Dawn::Vec4(1, 0, 1, 1);
     float quadRotation = 0;
 
+    Dawn::Texture tex1;
+    Dawn::Texture tex2;
+
     Playground()
     {
         //Register Event Callbacks
@@ -36,6 +39,9 @@ class Playground : public Dawn::Application
         Dawn::EventHandler::Listen(Dawn::EventType::MouseScrolled, test);
 
         Dawn::EventHandler::Listen(Dawn::EventType::KeyPressed, test_keycodes);
+
+        tex1.loadFromFile("test.png");
+        tex2.loadFromFile("test2.png");
     }
 
     void onImGuiUpdate() override
@@ -66,8 +72,26 @@ class Playground : public Dawn::Application
 
         Dawn::Renderer2D::StartFrame();
 
-        Dawn::Renderer2D::DrawQuad(Dawn::Vec3(-0.5, 0, 0), 0, Dawn::Vec3(0.5), Dawn::Vec4(1.0, 1.0, 1.0, 1.0));
-        Dawn::Renderer2D::DrawQuad(Dawn::Vec3(0.5, 0, 0), quadRotation, Dawn::Vec3(0.5), quadColor);
+        Dawn::Renderer2D::DrawQuad(Dawn::Vec3(-0.5, 0, 0), 0, Dawn::Vec3(0.5), Dawn::Vec4(1.0, 1.0, 1.0, 1.0), &tex1);
+        Dawn::Renderer2D::DrawQuad(Dawn::Vec3(0.5, 0, 0), quadRotation, Dawn::Vec3(0.5), quadColor, &tex2);
+        Dawn::Renderer2D::DrawQuad(Dawn::Vec3(-0.5, -0.5, 0), 0, Dawn::Vec3(0.5), quadColor);
+
+        int quads = 0;
+        for (float x = -1.0; x < 1.0; x += 0.02) {
+            for (float y = -1.0; y < 1.0; y += 0.02) {
+                quads++;
+                Dawn::Texture* tex = nullptr;
+                if (quads % 2 == 0)
+                    tex = &tex1;
+                else {
+                    tex = &tex2;
+                }
+
+                Dawn::Renderer2D::DrawQuad(Dawn::Vec3(x, y, 0), 0, Dawn::Vec3(0.02, 0.02, 1), quadColor * Dawn::Vec4((x + 1) / 2, (y + 1) / 2, 1.0, 1.0), tex);
+            }
+        }
+
+        //DAWN_LOG(quads);
 
         Dawn::Renderer2D::EndFrame();
     }

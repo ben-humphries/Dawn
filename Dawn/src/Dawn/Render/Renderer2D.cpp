@@ -1,13 +1,6 @@
 #include "Renderer2D.h"
 
-#include "Core/Log.h"
 #include "glad/glad.h"
-
-//TEMP
-#include "Util/Util.h"
-
-#include "Render/Image.h"
-#include "Render/Texture.h"
 
 namespace Dawn
 {
@@ -15,11 +8,14 @@ namespace Dawn
         Vec3 position;
         Vec4 color;
         Vec2 texCoord;
+        uint8_t texIndex;
     };
 
-    const uint32_t MAX_QUADS = 250;
-    const uint32_t MAX_VERTICES = MAX_QUADS * 4;
-    const uint32_t MAX_INDICES = MAX_QUADS * 6;
+    const size_t MAX_QUADS = 2000;
+    const size_t MAX_VERTICES = MAX_QUADS * 4;
+    const size_t MAX_INDICES = MAX_QUADS * 6;
+
+    const size_t MAX_TEXTURES = 16;  //Should be dependent on GPU's number of texture slots
 
     uint32_t vbo;
     uint32_t vao;
@@ -39,24 +35,14 @@ namespace Dawn
         Vec3(-0.5f, -0.5f, 0.0f),
         Vec3(-0.5f, 0.5f, 0.0f)};
 
-    //TEMP
-    Texture texture;
-    Texture texture2;
+    Texture* currentBatchTextureArray[MAX_TEXTURES];
+
+    size_t currentBatchQuads = 0;
+    size_t currentBatchTextures = 1;  //First texture is reserved for no texture
+    size_t currentBatches = 0;
 
     void Renderer2D::Init()
     {
-        //TEXTURE TEST
-        Image image = Image();
-        image.loadFromFile("test.png");
-
-        LOG("Current working directory: ", GetWorkingDirectory());
-
-        //texture.loadFromImage(image);
-        texture.loadFromFile("test.png");
-        texture2.loadFromFile("test2.png");
-
-        ///////////////////////////////////////
-
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -69,15 +55,19 @@ namespace Dawn
             "layout (location = 0) in vec3 aPos;\n"
             "layout (location = 1) in vec4 aColor;\n"
             "layout (location = 2) in vec2 aTexCoord;\n"
+            "layout (location = 3) in float aTexIndex;\n"
 
             "out vec4 color;\n"
             "out vec2 texCoord;\n"
+            "out float texIndex;\n"
 
             "void main()\n"
             "{\n"
             "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
             "   color = aColor;\n"
             "   texCoord = aTexCoord;\n"
+            "   texIndex = aTexIndex;\n"
+
             "}\0";
 
         const char* fragmentShaderSource =
@@ -87,11 +77,18 @@ namespace Dawn
 
             "in vec4 color;\n"
             "in vec2 texCoord;\n"
+            "in float texIndex;\n"
 
-            "uniform sampler2D inputTexture;\n"
+            "uniform sampler2D inputTextures[16];\n"
             "void main()\n"
             "{\n"
-            "   FragColor = color * texture(inputTexture, texCoord);\n"
+            "   int index = int(texIndex);\n"
+            "   if (index == 0) {\n"
+            "       FragColor = color;\n"
+            "   }\n"
+            "   else {\n"
+            "       FragColor = color * texture(inputTextures[index], texCoord);\n"
+            "   }\n"
             "}\0";
 
         unsigned int vertexShader;
@@ -162,10 +159,20 @@ namespace Dawn
 
         glEnableVertexAttribArray(2);
         glVertexAttribPointer(2, 2, GL_FLOAT, false, sizeof(Vertex), (void*)(sizeof(Vec3) + sizeof(Vec4)));
+
+        glEnableVertexAttribArray(3);
+        glVertexAttribPointer(3, 1, GL_UNSIGNED_BYTE, false, sizeof(Vertex), (void*)(sizeof(Vec3) + sizeof(Vec4) + sizeof(Vec2)));
+
+        //Initialize texture array
+        for (int i = 0; i < MAX_TEXTURES; i++) {
+            currentBatchTextureArray[i] = nullptr;
+        }
     }
 
     void Renderer2D::Terminate()
     {
+        delete[] vertices;
+        delete[] indices;
         glDeleteProgram(shaderProgram);
     }
 
@@ -174,10 +181,8 @@ namespace Dawn
         currentVertexPtr = vertices;
     }
 
-    void Renderer2D::EndFrame()
+    void Renderer2D::Flush()
     {
-        texture.bind();
-
         glBindVertexArray(vao);
 
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -185,13 +190,38 @@ namespace Dawn
 
         glUseProgram(shaderProgram);
 
+        for (int i = 1; i < currentBatchTextures; i++) {
+            glActiveTexture(GL_TEXTURE0 + i);
+            currentBatchTextureArray[i]->bind();
+        }
+
+        GLint location = glGetUniformLocation(shaderProgram, "inputTextures");
+        int* samplers = new int[MAX_TEXTURES];
+        for (int i = 0; i < MAX_TEXTURES; i++) {
+            samplers[i] = i;
+        }
+        glUniform1iv(location, MAX_TEXTURES, samplers);
+
+        delete[] samplers;
+
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 
         //TODO: Once there is benchmarking, see if using the actual number vs. the MAX_INDICES makes a difference
-        glDrawElements(GL_TRIANGLES, MAX_INDICES, GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, currentBatchQuads * 6, GL_UNSIGNED_INT, 0);
+
+        currentBatchQuads = 0;
+        currentBatchTextures = 1;
+        currentVertexPtr = vertices;
+        currentBatches++;
     }
 
-    void Renderer2D::DrawQuad(Vec3 position, float rotation, Vec3 scale, Vec4 color)
+    void Renderer2D::EndFrame()
+    {
+        Flush();
+        currentBatches = 0;
+    }
+
+    void Renderer2D::DrawQuad(Vec3 position, float rotation, Vec3 scale, Vec4 color, Texture* texture)
     {
         Mat4 translationMatrix = GetTranslationMatrix(position);
         Mat4 rotationMatrix = GetRotationMatrix(Vec3(0, 0, -1), rotation);
@@ -199,14 +229,39 @@ namespace Dawn
 
         Mat4 modelMatrix = GetModelMatrix(translationMatrix, rotationMatrix, scaleMatrix);
 
+        int texIndex;
+        bool alreadyLoaded = false;
+        if (!texture)
+            texIndex = 0;
+        else {
+            //Check if texture is already in the array
+            for (int i = 0; i < MAX_TEXTURES; i++) {
+                if (currentBatchTextureArray[i] == texture) {
+                    texIndex = i;
+                    alreadyLoaded = true;
+                    break;
+                }
+            }
+
+            if (!alreadyLoaded) {
+                texIndex = currentBatchTextures;
+                currentBatchTextureArray[currentBatchTextures++] = texture;
+            }
+        }
+
         for (int i = 0; i < 4; i++) {
             Vec4 vPosition = Vec4(quadVertexPositions[i].x, quadVertexPositions[i].y, quadVertexPositions[i].z, 1);
             vPosition = modelMatrix * vPosition;
             currentVertexPtr->position = Vec3(vPosition.x, vPosition.y, vPosition.z);
             currentVertexPtr->color = color;
             currentVertexPtr->texCoord = texCoords[i];
+            currentVertexPtr->texIndex = texIndex;
 
             currentVertexPtr++;
         }
+        currentBatchQuads++;
+
+        if (currentBatchQuads >= MAX_QUADS || currentBatchTextures >= MAX_TEXTURES)
+            Flush();
     }
 }  // namespace Dawn
