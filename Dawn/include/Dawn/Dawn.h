@@ -1,4 +1,5 @@
 #pragma once
+#include "DawnPCH.h"
 
 #include "Core/Application.h"
 #include "Core/Time.h"

@@ -1,11 +1,11 @@
 #pragma once
+#include "DawnPCH.h"
 
 #include "Core/KeyCode.h"
 #include "GLFW/glfw3.h"
 #include "imgui_impl_opengl3.h"
 #include "Core/Event.h"
 #include "Core/Window.h"
-#include <memory>
 
 //TODO: A lot of magic numbers and strings in here. Needs to be cleaned up eventually
 

@@ -1,8 +1,5 @@
 #pragma once
-
-#include <iostream>
-
-//#include "Dawn/Log_Def.h"
+#include "DawnPCH.h"
 
 #define LOG(args...) Log::print("DAWN ENGINE: ", args)
 #define DAWN_LOG(args...) Dawn::Log::print("DAWN APP: ", args)

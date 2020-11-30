@@ -1,6 +1,5 @@
 #pragma once
-
-#include <memory>
+#include "DawnPCH.h"
 
 #include "Event.h"
 #include "Window.h"

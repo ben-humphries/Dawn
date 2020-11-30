@@ -1,9 +1,8 @@
 #pragma once
+#include "DawnPCH.h"
 
 #include "Math/Math.h"
 #include "Texture.h"
-
-#include <cstdint>
 
 namespace Dawn
 {

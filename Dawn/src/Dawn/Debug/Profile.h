@@ -1,7 +1,5 @@
 #pragma once
-
-#include <string>
-#include <vector>
+#include "DawnPCH.h"
 
 #define PROFILE_FUNC() ProfileTimer timer(__FUNCTION__ + std::string("()::") + std::to_string(__LINE__))
 #define DAWN_PROFILE_FUNC() Dawn::ProfileTimer timer(__FUNCTION__ + std::string("()::") + std::to_string(__LINE__))

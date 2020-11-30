@@ -44,3 +44,5 @@ target_link_libraries(Dawn ${OPENGL_LIBRARIES})
 
 ##SET UP INCLUDE DIRECTORIES##
 target_include_directories(Dawn PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include ${OPENGL_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/src/Dawn)
+
+target_precompile_headers(Dawn PUBLIC src/Dawn/DawnPCH.h)
