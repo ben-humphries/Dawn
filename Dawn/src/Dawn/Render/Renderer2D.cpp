@@ -11,7 +11,7 @@ namespace Dawn
         uint8_t texIndex;
     };
 
-    const size_t MAX_QUADS = 2000;
+    const size_t MAX_QUADS = 1000;
     const size_t MAX_VERTICES = MAX_QUADS * 4;
     const size_t MAX_INDICES = MAX_QUADS * 6;
 

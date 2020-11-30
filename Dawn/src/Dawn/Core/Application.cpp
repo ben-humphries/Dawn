@@ -4,6 +4,7 @@
 
 #include "Log.h"
 #include "Render/Renderer2D.h"
+#include "Time.h"
 
 namespace Dawn
 {
@@ -49,6 +50,7 @@ namespace Dawn
     {
         // Main Loop
         while (m_running) {
+            Time::UpdateTimestep();
             onEngineUpdate();
             if (m_imguiContext) m_imguiContext->onUpdate();
             onUpdate();

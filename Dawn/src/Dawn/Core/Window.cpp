@@ -41,6 +41,10 @@ namespace Dawn
 
         glViewport(0, 0, width, height);
 
+        //TEMP
+        //TODO: Add Vsync function
+        //glfwSwapInterval(0);
+
         Window::initialized = true;
 
         //Set GLFW callbacks

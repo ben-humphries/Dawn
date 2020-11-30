@@ -52,7 +52,8 @@ class Playground : public Dawn::Application
         ImGui::Begin("Demo window");
         ImGui::ColorPicker4("triangle color", (float*)&quadColor);
         ImGui::DragFloat("rotation", &quadRotation, 0.1f, 0.f, 6.28f, NULL, 1.f);
-        ImGui::TextColored(ImVec4(1, 0, 0, 1), "testing!");
+        std::string fps = "FPS: " + std::to_string(1.0f / Dawn::Time::deltaTime);
+        ImGui::TextColored(ImVec4(1, 0, 0, 1), fps.c_str());
         ImGui::TextWrapped("testetestsetset testest testing a gain this is more wrapped text let's see how this goes.");
         ImGui::SetWindowSize(ImVec2(400, 900), ImGuiCond_FirstUseEver);
         ImGui::Button("Hello!");
@@ -87,7 +88,7 @@ class Playground : public Dawn::Application
                     tex = &tex2;
                 }
 
-                Dawn::Renderer2D::DrawQuad(Dawn::Vec3(x, y, 0), 0, Dawn::Vec3(0.02, 0.02, 1), quadColor * Dawn::Vec4((x + 1) / 2, (y + 1) / 2, 1.0, 1.0), tex);
+                Dawn::Renderer2D::DrawQuad(Dawn::Vec3(x, y, 0), quadRotation, Dawn::Vec3(0.02, 0.02, 1), quadColor * Dawn::Vec4((x + 1) / 2, (y + 1) / 2, 1.0, 1.0), tex);
             }
         }
 

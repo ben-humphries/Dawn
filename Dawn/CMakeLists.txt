@@ -4,6 +4,7 @@ set(SRC_FILES ${SRC_FILES}
     src/Dawn/Core/Window.cpp
     src/Dawn/Core/Event.cpp
     src/Dawn/Core/Input.cpp
+    src/Dawn/Core/Time.cpp
 
     src/Dawn/Render/Renderer2D.cpp
     src/Dawn/Render/Image.cpp
