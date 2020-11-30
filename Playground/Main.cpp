@@ -59,6 +59,11 @@ class Playground : public Dawn::Application
         std::string fps = "FPS: " + std::to_string(1.0f / Dawn::Time::deltaTime);
         ImGui::TextColored(ImVec4(1, 0, 0, 1), fps.c_str());
 
+        std::string memory = "Heap Memory Allocated: " + std::to_string(Dawn::Memory::GetCurrentlyAllocated()) + " bytes";
+        ImGui::Text(memory.c_str());
+        std::string allocations = "Total Allocations: " + std::to_string(Dawn::Memory::GetAllocations());
+        ImGui::Text(allocations.c_str());
+
         for (auto scopeTime : Dawn::ProfileTimer::s_scopeTimes) {
             std::string display = std::to_string(scopeTime.time) + "s || " + scopeTime.name;
             ImGui::Text(display.c_str());
