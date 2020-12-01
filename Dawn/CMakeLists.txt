@@ -9,6 +9,7 @@ set(SRC_FILES ${SRC_FILES}
     src/Dawn/Render/Renderer2D.cpp
     src/Dawn/Render/Image.cpp
     src/Dawn/Render/Texture.cpp
+    src/Dawn/Render/Framebuffer.cpp
 
     src/Dawn/Math/Math.cpp
 

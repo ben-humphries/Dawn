@@ -36,6 +36,8 @@ namespace Dawn
 #ifndef DAWN_MEMORY_MANAGEMENT_OVERLOADED
 #define DAWN_MEMORY_MANAGEMENT_OVERLOADED
 
+//TODO: Implement all other variations of new and delete operators
+
 #ifndef __INTELLISENSE__  //Solely to prevent a buggy error from appearing in VSCode. This code is still present.
 inline void* operator new(size_t size)
 {

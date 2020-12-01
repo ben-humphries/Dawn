@@ -25,6 +25,9 @@ class Playground : public Dawn::Application
     Dawn::Texture tex1;
     Dawn::Texture tex2;
 
+    //get window width and height
+    Dawn::Framebuffer fb = Dawn::Framebuffer(1920, 1920);
+
     Playground()
     {
         //Register Event Callbacks
@@ -48,8 +51,8 @@ class Playground : public Dawn::Application
     {
         DAWN_PROFILE_FUNC();
 
-        //static bool show = true;
-        //ImGui::ShowDemoWindow(&show);
+        static bool show = true;
+        ImGui::ShowDemoWindow(&show);
 
         ImGui::Begin("Demo window");
         ImGui::SetWindowSize(ImVec2(400, 900), ImGuiCond_FirstUseEver);
@@ -71,32 +74,41 @@ class Playground : public Dawn::Application
         Dawn::ProfileTimer::s_scopeTimes.clear();
 
         ImGui::End();
+
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+        ImGui::Begin("Viewport", NULL, ImGuiWindowFlags_NoTitleBar);
+        ImGui::SetWindowSize(ImVec2(600, 600), ImGuiCond_FirstUseEver);
+        ImVec2 spaceAvailable = ImGui::GetContentRegionAvail();
+        ImGui::Image((void*)fb.getColorTextureHandle(), spaceAvailable, ImVec2(0, 1), ImVec2(1, 0));
+        ImGui::End();
+        ImGui::PopStyleVar(2);
     }
 
     void onUpdate() override
     {
         DAWN_PROFILE_FUNC();
 
-        {
-            DAWN_PROFILE_SCOPE("check input");
-            if (Dawn::Input::GetKeyDown(Dawn::KeyCode::B)) {
-                DAWN_LOG("B is being pressed");
-            }
-            if (Dawn::Input::GetMouseButtonDown(Dawn::MouseCode::Middle)) {
-                DAWN_LOG("Middle MB being pressed");
-            }
+        if (Dawn::Input::GetKeyDown(Dawn::KeyCode::B)) {
+            DAWN_LOG("B is being pressed");
+        }
+        if (Dawn::Input::GetMouseButtonDown(Dawn::MouseCode::Middle)) {
+            DAWN_LOG("Middle MB being pressed");
         }
 
         //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        fb.bind();
+        glClearColor(0.2, 0.2, 0.2, 1.0);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glEnable(GL_DEPTH_TEST);
 
-        {
-            DAWN_PROFILE_SCOPE("render quads");
-            Dawn::Renderer2D::StartFrame();
+        Dawn::Renderer2D::StartFrame();
+        //clear color
 
-            Dawn::Renderer2D::DrawQuad(Dawn::Vec3(-0.5, 0, 0), 0, Dawn::Vec3(0.5), Dawn::Vec4(1.0, 1.0, 1.0, 1.0), &tex1);
-            Dawn::Renderer2D::DrawQuad(Dawn::Vec3(0.5, 0, 0), quadRotation, Dawn::Vec3(0.5), quadColor, &tex2);
-            Dawn::Renderer2D::DrawQuad(Dawn::Vec3(-0.5, -0.5, 0), 0, Dawn::Vec3(0.5), quadColor);
-        }
+        Dawn::Renderer2D::DrawQuad(Dawn::Vec3(-0.5, 0, 0), 0, Dawn::Vec3(0.5), Dawn::Vec4(1.0, 1.0, 1.0, 1.0), &tex1);
+        Dawn::Renderer2D::DrawQuad(Dawn::Vec3(0.5, 0, 0), quadRotation, Dawn::Vec3(0.5), quadColor, &tex2);
+        Dawn::Renderer2D::DrawQuad(Dawn::Vec3(-0.5, -0.5, 0), 0, Dawn::Vec3(0.5), quadColor);
+
         // int quads = 0;
         // for (float x = -1.0; x < 1.0; x += 0.02) {
         //     for (float y = -1.0; y < 1.0; y += 0.02) {
@@ -114,11 +126,10 @@ class Playground : public Dawn::Application
 
         //DAWN_LOG(quads);
 
-        {
-            DAWN_PROFILE_SCOPE("end frame");
+        Dawn::Renderer2D::EndFrame();
+        fb.unbind();
 
-            Dawn::Renderer2D::EndFrame();
-        }
+        //ImGui::Image((ImTextureID)fb.getColorTextureHandle(), ImVec2(1920, 1920));
     }
 
     void onClose() override

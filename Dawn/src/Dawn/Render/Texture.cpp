@@ -16,10 +16,16 @@ namespace Dawn
         bind();
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.getWidth(), image.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, image.getDataPtr());
         glGenerateMipmap(GL_TEXTURE_2D);
+
+        m_width = image.getWidth();
+        m_height = image.getHeight();
     }
     void Texture::loadFromFile(const std::string& path)
     {
         Image image = Image(path);
         loadFromImage(image);
+
+        m_width = image.getWidth();
+        m_height = image.getHeight();
     }
 }

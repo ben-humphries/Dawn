@@ -11,6 +11,9 @@
 #include "Math/Math.h"
 
 #include "Render/Renderer2D.h"
+#include "Render/Image.h"
+#include "Render/Texture.h"
+#include "Render/Framebuffer.h"
 
 //DEBUG
 #include "Debug/Profile.h"
