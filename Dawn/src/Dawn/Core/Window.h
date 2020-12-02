@@ -35,6 +35,8 @@ namespace Dawn
 
         GLFWwindow* m_window;
 
+        int m_width, m_height;
+
         static bool initialized;
     };
 }  // namespace Dawn

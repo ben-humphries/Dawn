@@ -26,6 +26,9 @@ namespace Dawn
         // Called after game loop finishes
         void close();
 
+       protected:
+        Window& getWindow();
+
        private:
         void onEngineUpdate();
         void onEngineLateUpdate();

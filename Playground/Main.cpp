@@ -1,7 +1,11 @@
 #include "Dawn/Dawn.h"
 
+#include "imgui_internal.h"
+
 //TEMP
 #include "glad/glad.h"
+
+#define IMGUI_DEFINE_MATH_OPERATORS
 
 void test(const Dawn::Event& e)
 {
@@ -16,6 +20,38 @@ void test_keycodes(const Dawn::Event& e)
     }
 }
 
+void DrawSplitter(int split_vertically, float thickness, float* size0, float* size1, float min_size0, float min_size1)
+{
+    ImVec2 backup_pos = ImGui::GetCursorPos();
+    if (split_vertically)
+        ImGui::SetCursorPosY(backup_pos.y + *size0);
+    else
+        ImGui::SetCursorPosX(backup_pos.x + *size0);
+
+    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0, 0, 0));  // We don't draw while active/pressed because as we move the panes the splitter button will be 1 frame late
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.6f, 0.6f, 0.6f, 0.10f));
+    ImGui::Button("##Splitter", ImVec2(!split_vertically ? thickness : -1.0f, split_vertically ? thickness : -1.0f));
+    ImGui::PopStyleColor(3);
+
+    ImGui::SetItemAllowOverlap();  // This is to allow having other buttons OVER our splitter.
+
+    if (ImGui::IsItemActive()) {
+        float mouse_delta = split_vertically ? ImGui::GetIO().MouseDelta.y : ImGui::GetIO().MouseDelta.x;
+
+        //Minimum pane size
+        if (mouse_delta < min_size0 - *size0)
+            mouse_delta = min_size0 - *size0;
+        if (mouse_delta > *size1 - min_size1)
+            mouse_delta = *size1 - min_size1;
+
+        // Apply resize
+        *size0 += mouse_delta;
+        *size1 -= mouse_delta;
+    }
+    ImGui::SetCursorPos(backup_pos);
+}
+
 class Playground : public Dawn::Application
 {
    public:
@@ -27,6 +63,13 @@ class Playground : public Dawn::Application
 
     //get window width and height
     Dawn::Framebuffer fb = Dawn::Framebuffer(1920, 1920);
+
+    //IMGUI
+    float leftPanelSizeLeft = 400;
+    float leftPanelSizeRight = 1920 - 440;
+
+    float rightPanelSizeLeft = 400;
+    float rightPanelSizeRight = 400;
 
     Playground()
     {
@@ -51,13 +94,35 @@ class Playground : public Dawn::Application
     {
         DAWN_PROFILE_FUNC();
 
-        static bool show = true;
-        ImGui::ShowDemoWindow(&show);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
 
-        ImGui::Begin("Demo window");
-        ImGui::SetWindowSize(ImVec2(400, 900), ImGuiCond_FirstUseEver);
+        //TODO: Resizing doesn't completely work and can glitch out after resizing the window
+        //TODO: Resize frame buffer
+        ImGui::SetNextWindowSize(ImVec2(getWindow().getWidth(), getWindow().getHeight()));
+        ImGui::Begin("Main Window", NULL, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus);
+        ImGui::SetWindowPos(ImVec2(0, 0));
 
-        ImGui::ColorPicker4("triangle color", (float*)&quadColor);
+        //MENU BAR
+        ImVec2 menuBarSize;
+        if (ImGui::BeginMenuBar()) {
+            menuBarSize = ImGui::GetWindowSize();
+            if (ImGui::BeginMenu("File")) {
+                if (ImGui::BeginMenu("Open")) {
+                    if (ImGui::MenuItem("test")) {
+                        DAWN_LOG("Opened something");
+                    }
+                    ImGui::EndMenu();
+                }
+                ImGui::EndMenu();
+            }
+            ImGui::EndMenuBar();
+        }
+
+        //LEFT PANEL
+        DrawSplitter(false, 10, &leftPanelSizeLeft, &leftPanelSizeRight, 400, 0);
+        ImGui::BeginChild("Left Panel", ImVec2(leftPanelSizeLeft, getWindow().getHeight() - menuBarSize.y), true);
+        ImGui::ColorPicker4("quad color", (float*)&quadColor);
         ImGui::DragFloat("rotation", &quadRotation, 0.1f, 0.f, 6.28f, NULL, 1.f);
         std::string fps = "FPS: " + std::to_string(1.0f / Dawn::Time::deltaTime);
         ImGui::TextColored(ImVec4(1, 0, 0, 1), fps.c_str());
@@ -72,17 +137,25 @@ class Playground : public Dawn::Application
             ImGui::Text(display.c_str());
         }
         Dawn::ProfileTimer::s_scopeTimes.clear();
+        ImGui::EndChild();
 
-        ImGui::End();
-
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-        ImGui::Begin("Viewport", NULL, ImGuiWindowFlags_NoTitleBar);
-        ImGui::SetWindowSize(ImVec2(600, 600), ImGuiCond_FirstUseEver);
+        ImGui::SameLine();
+        ImGui::BeginChild("Right Panel", ImVec2(getWindow().getWidth() - leftPanelSizeLeft - 20 - 5, getWindow().getHeight() - menuBarSize.y), true);
         ImVec2 spaceAvailable = ImGui::GetContentRegionAvail();
+        // if (spaceAvailable.x < spaceAvailable.y)
+        //     spaceAvailable.y = spaceAvailable.x;
+        // else if (spaceAvailable.y < spaceAvailable.x)
+        //     spaceAvailable.x = spaceAvailable.y;
         ImGui::Image((void*)fb.getColorTextureHandle(), spaceAvailable, ImVec2(0, 1), ImVec2(1, 0));
-        ImGui::End();
+        ImGui::EndChild();
+
+        ImGui::End();  //Main Window
+
         ImGui::PopStyleVar(2);
+
+        //DEMO WINDOW
+        //static bool show = true;
+        //ImGui::ShowDemoWindow(&show);
     }
 
     void onUpdate() override

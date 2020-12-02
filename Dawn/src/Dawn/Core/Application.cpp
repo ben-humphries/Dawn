@@ -68,4 +68,9 @@ namespace Dawn
         if (m_imguiContext) m_imguiContext->onClose();
         glfwTerminate();
     }
+
+    Window& Application::getWindow()
+    {
+        return *m_window;
+    }
 }  // namespace Dawn

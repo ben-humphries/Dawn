@@ -13,9 +13,12 @@ namespace Dawn
         const WindowResizedEvent& w_e = (const WindowResizedEvent&)e;
 
         glViewport(0, 0, w_e.getWidth(), w_e.getHeight());
+        m_width = w_e.getWidth();
+        m_height = w_e.getHeight();
     }
 
     Window::Window(int width, int height, const std::string& name)
+        : m_width(width), m_height(height)
     {
         if (!Window::initialized) {
             if (glfwInit() == GLFW_FALSE) {
@@ -127,18 +130,12 @@ namespace Dawn
 
     int Window::getWidth()
     {
-        int width, height;
-        glfwGetWindowSize(m_window, &width, &height);
-
-        return width;
+        return m_width;
     }
 
     int Window::getHeight()
     {
-        int width, height;
-        glfwGetWindowSize(m_window, &width, &height);
-
-        return height;
+        return m_height;
     }
 
 }  // namespace Dawn
