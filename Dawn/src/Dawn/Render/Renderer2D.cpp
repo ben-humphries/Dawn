@@ -194,6 +194,7 @@ namespace Dawn
             glActiveTexture(GL_TEXTURE0 + i);
             currentBatchTextureArray[i]->bind();
         }
+        glActiveTexture(GL_TEXTURE0);
 
         GLint location = glGetUniformLocation(shaderProgram, "inputTextures");
         int* samplers = new int[MAX_TEXTURES];

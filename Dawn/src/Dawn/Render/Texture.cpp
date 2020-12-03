@@ -14,6 +14,7 @@ namespace Dawn
         //TODO: Check if texture exists already, and if so, delete it before overwriting.
         glGenTextures(1, &m_textureHandle);
         bind();
+
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.getWidth(), image.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, image.getDataPtr());
         glGenerateMipmap(GL_TEXTURE_2D);
 
@@ -28,4 +29,4 @@ namespace Dawn
         m_width = image.getWidth();
         m_height = image.getHeight();
     }
-}
+}  // namespace Dawn

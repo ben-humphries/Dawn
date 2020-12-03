@@ -12,6 +12,8 @@ namespace Dawn
         void bind();
         void unbind();
 
+        void resize(size_t width, size_t height);
+
         uint32_t getFrameBufferHandle()
         {
             return m_framebufferHandle;
@@ -28,6 +30,8 @@ namespace Dawn
         }
 
        private:
+        void invalidate();
+
         uint32_t m_framebufferHandle;
         uint32_t m_colorTextureHandle;
         uint32_t m_depthStencilTextureHandle;

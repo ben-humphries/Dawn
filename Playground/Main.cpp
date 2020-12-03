@@ -1,5 +1,4 @@
 #include "Dawn/Dawn.h"
-
 #include "imgui_internal.h"
 
 //TEMP
@@ -9,7 +8,7 @@
 
 void test(const Dawn::Event& e)
 {
-    DAWN_LOG(e.toString());
+    //DAWN_LOG(e.toString());
 }
 
 void test_keycodes(const Dawn::Event& e)
@@ -57,6 +56,7 @@ class Playground : public Dawn::Application
    public:
     Dawn::Vec4 quadColor = Dawn::Vec4(1, 0, 1, 1);
     float quadRotation = 0;
+    float quadPosition = 0;
 
     Dawn::Texture tex1;
     Dawn::Texture tex2;
@@ -68,8 +68,7 @@ class Playground : public Dawn::Application
     float leftPanelSizeLeft = 400;
     float leftPanelSizeRight = 1920 - 440;
 
-    float rightPanelSizeLeft = 400;
-    float rightPanelSizeRight = 400;
+    ImVec2 viewportPanelSize = ImVec2(0, 0);
 
     Playground()
     {
@@ -124,6 +123,8 @@ class Playground : public Dawn::Application
         ImGui::BeginChild("Left Panel", ImVec2(leftPanelSizeLeft, getWindow().getHeight() - menuBarSize.y), true);
         ImGui::ColorPicker4("quad color", (float*)&quadColor);
         ImGui::DragFloat("rotation", &quadRotation, 0.1f, 0.f, 6.28f, NULL, 1.f);
+        ImGui::DragFloat("position", &quadPosition, 0.1f, -1.f, 1.0f, NULL, 1.f);
+
         std::string fps = "FPS: " + std::to_string(1.0f / Dawn::Time::deltaTime);
         ImGui::TextColored(ImVec4(1, 0, 0, 1), fps.c_str());
 
@@ -141,12 +142,10 @@ class Playground : public Dawn::Application
 
         ImGui::SameLine();
         ImGui::BeginChild("Right Panel", ImVec2(getWindow().getWidth() - leftPanelSizeLeft - 20 - 5, getWindow().getHeight() - menuBarSize.y), true);
-        ImVec2 spaceAvailable = ImGui::GetContentRegionAvail();
-        // if (spaceAvailable.x < spaceAvailable.y)
-        //     spaceAvailable.y = spaceAvailable.x;
-        // else if (spaceAvailable.y < spaceAvailable.x)
-        //     spaceAvailable.x = spaceAvailable.y;
-        ImGui::Image((void*)fb.getColorTextureHandle(), spaceAvailable, ImVec2(0, 1), ImVec2(1, 0));
+
+        viewportPanelSize = ImGui::GetContentRegionAvail();
+        ImGui::Image((void*)fb.getColorTextureHandle(), viewportPanelSize, ImVec2(0, 1), ImVec2(1, 0));
+
         ImGui::EndChild();
 
         ImGui::End();  //Main Window
@@ -170,6 +169,9 @@ class Playground : public Dawn::Application
         }
 
         //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        if (viewportPanelSize.x > 0 && viewportPanelSize.y > 0)
+            fb.resize(viewportPanelSize.x, viewportPanelSize.y);
+
         fb.bind();
         glClearColor(0.2, 0.2, 0.2, 1.0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -179,7 +181,7 @@ class Playground : public Dawn::Application
         //clear color
 
         Dawn::Renderer2D::DrawQuad(Dawn::Vec3(-0.5, 0, 0), 0, Dawn::Vec3(0.5), Dawn::Vec4(1.0, 1.0, 1.0, 1.0), &tex1);
-        Dawn::Renderer2D::DrawQuad(Dawn::Vec3(0.5, 0, 0), quadRotation, Dawn::Vec3(0.5), quadColor, &tex2);
+        Dawn::Renderer2D::DrawQuad(Dawn::Vec3(quadPosition, 0, 0), quadRotation, Dawn::Vec3(0.5), quadColor, &tex2);
         Dawn::Renderer2D::DrawQuad(Dawn::Vec3(-0.5, -0.5, 0), 0, Dawn::Vec3(0.5), quadColor);
 
         // int quads = 0;
