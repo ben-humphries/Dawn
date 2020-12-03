@@ -56,6 +56,7 @@ class Playground : public Dawn::Application
 {
    public:
     Dawn::OrthographicCamera camera = Dawn::OrthographicCamera(-1.0, 1.0, -0.5, 0.5);
+    float zoom = 1.0f;
 
     Dawn::Vec4 quadColor = Dawn::Vec4(1, 0, 1, 1);
     float quadRotation = 0;
@@ -127,6 +128,7 @@ class Playground : public Dawn::Application
         ImGui::ColorPicker4("quad color", (float*)&quadColor);
         ImGui::DragFloat("rotation", &quadRotation, 0.1f, 0.f, 6.28f, NULL, 1.f);
         ImGui::DragFloat("position", &quadPosition, 0.1f, -1.f, 1.0f, NULL, 1.f);
+        ImGui::DragFloat("camera zoom", &zoom, 0.1f, 0.0f, 10.0f, NULL, 1.f);
 
         std::string fps = "FPS: " + std::to_string(1.0f / Dawn::Time::deltaTime);
         ImGui::TextColored(ImVec4(1, 0, 0, 1), fps.c_str());
@@ -176,22 +178,23 @@ class Playground : public Dawn::Application
             fb.resize(viewportPanelSize.x, viewportPanelSize.y);
             float normalizedX = viewportPanelSize.x / sqrt(viewportPanelSize.x * viewportPanelSize.x + viewportPanelSize.y * viewportPanelSize.y);
             float normalizedY = viewportPanelSize.y / sqrt(viewportPanelSize.x * viewportPanelSize.x + viewportPanelSize.y * viewportPanelSize.y);
-            camera.setProjection(-normalizedX, normalizedX, -normalizedY, normalizedY);
+
+            float aspectRatio = viewportPanelSize.x / viewportPanelSize.y;
+            camera.setProjection(-aspectRatio * zoom, aspectRatio * zoom, -1.0 * zoom, 1.0 * zoom);
         }
 
         fb.bind();
         glClearColor(0.2, 0.2, 0.2, 1.0);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glEnable(GL_DEPTH_TEST);
+        glClear(GL_COLOR_BUFFER_BIT);
 
-        camera.setPosition(Dawn::Vec3(quadPosition, 0, 0));
-        camera.setRotation(-quadRotation);
+        camera.setPosition(Dawn::Vec3(0, 0, -1));
+        //camera.setRotation(-quadRotation);
 
         Dawn::Renderer2D::StartFrame(camera);
         //clear color
 
+        Dawn::Renderer2D::DrawQuad(Dawn::Vec3(0, 0, 0), quadRotation, Dawn::Vec3(1.0), quadColor, &tex2);
         Dawn::Renderer2D::DrawQuad(Dawn::Vec3(-0.5, 0, 0), 0, Dawn::Vec3(0.5), Dawn::Vec4(1.0, 1.0, 1.0, 1.0), &tex1);
-        Dawn::Renderer2D::DrawQuad(Dawn::Vec3(quadPosition, 0, 0), quadRotation, Dawn::Vec3(0.5), quadColor, &tex2);
         Dawn::Renderer2D::DrawQuad(Dawn::Vec3(-0.5, -0.5, 0), 0, Dawn::Vec3(0.5), quadColor);
 
         // int quads = 0;
