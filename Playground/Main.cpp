@@ -51,9 +51,12 @@ void DrawSplitter(int split_vertically, float thickness, float* size0, float* si
     ImGui::SetCursorPos(backup_pos);
 }
 
+//////////////////////PLAYGROUND CLASS///////////////////////////
 class Playground : public Dawn::Application
 {
    public:
+    Dawn::OrthographicCamera camera = Dawn::OrthographicCamera(-1.0, 1.0, -0.5, 0.5);
+
     Dawn::Vec4 quadColor = Dawn::Vec4(1, 0, 1, 1);
     float quadRotation = 0;
     float quadPosition = 0;
@@ -169,15 +172,22 @@ class Playground : public Dawn::Application
         }
 
         //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        if (viewportPanelSize.x > 0 && viewportPanelSize.y > 0)
+        if (viewportPanelSize.x > 0 && viewportPanelSize.y > 0) {
             fb.resize(viewportPanelSize.x, viewportPanelSize.y);
+            float normalizedX = viewportPanelSize.x / sqrt(viewportPanelSize.x * viewportPanelSize.x + viewportPanelSize.y * viewportPanelSize.y);
+            float normalizedY = viewportPanelSize.y / sqrt(viewportPanelSize.x * viewportPanelSize.x + viewportPanelSize.y * viewportPanelSize.y);
+            camera.setProjection(-normalizedX, normalizedX, -normalizedY, normalizedY);
+        }
 
         fb.bind();
         glClearColor(0.2, 0.2, 0.2, 1.0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glEnable(GL_DEPTH_TEST);
 
-        Dawn::Renderer2D::StartFrame();
+        camera.setPosition(Dawn::Vec3(quadPosition, 0, 0));
+        camera.setRotation(-quadRotation);
+
+        Dawn::Renderer2D::StartFrame(camera);
         //clear color
 
         Dawn::Renderer2D::DrawQuad(Dawn::Vec3(-0.5, 0, 0), 0, Dawn::Vec3(0.5), Dawn::Vec4(1.0, 1.0, 1.0, 1.0), &tex1);

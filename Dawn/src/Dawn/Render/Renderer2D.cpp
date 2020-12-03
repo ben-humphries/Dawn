@@ -61,9 +61,11 @@ namespace Dawn
             "out vec2 texCoord;\n"
             "out float texIndex;\n"
 
+            "uniform mat4 u_viewProjectionMatrix;\n"
+
             "void main()\n"
             "{\n"
-            "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+            "   gl_Position = u_viewProjectionMatrix * vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
             "   color = aColor;\n"
             "   texCoord = aTexCoord;\n"
             "   texIndex = aTexIndex;\n"
@@ -79,7 +81,7 @@ namespace Dawn
             "in vec2 texCoord;\n"
             "in float texIndex;\n"
 
-            "uniform sampler2D inputTextures[16];\n"
+            "uniform sampler2D u_inputTextures[16];\n"
             "void main()\n"
             "{\n"
             "   int index = int(texIndex);\n"
@@ -87,7 +89,7 @@ namespace Dawn
             "       FragColor = color;\n"
             "   }\n"
             "   else {\n"
-            "       FragColor = color * texture(inputTextures[index], texCoord);\n"
+            "       FragColor = color * texture(u_inputTextures[index], texCoord);\n"
             "   }\n"
             "}\0";
 
@@ -176,9 +178,13 @@ namespace Dawn
         glDeleteProgram(shaderProgram);
     }
 
-    void Renderer2D::StartFrame()
+    void Renderer2D::StartFrame(const OrthographicCamera& camera)
     {
         currentVertexPtr = vertices;
+
+        glUseProgram(shaderProgram);
+        GLint location = glGetUniformLocation(shaderProgram, "u_viewProjectionMatrix");
+        glUniformMatrix4fv(location, 1, GL_FALSE, camera.getViewProjectionMatrix().GetPtr());
     }
 
     void Renderer2D::Flush()
@@ -196,7 +202,7 @@ namespace Dawn
         }
         glActiveTexture(GL_TEXTURE0);
 
-        GLint location = glGetUniformLocation(shaderProgram, "inputTextures");
+        GLint location = glGetUniformLocation(shaderProgram, "u_inputTextures");
         int* samplers = new int[MAX_TEXTURES];
         for (int i = 0; i < MAX_TEXTURES; i++) {
             samplers[i] = i;

@@ -192,9 +192,9 @@ namespace Dawn
         values[y + 4 * x] = val;
     }
 
-    float* Mat4::getPtr()
+    float* Mat4::GetPtr() const
     {
-        return values;
+        return (float*)values;
     }
 
     Mat4 Mat4::operator*(const Mat4& m) const
@@ -290,6 +290,20 @@ namespace Dawn
         m.Set(1, 2, z.y);
         m.Set(2, 2, z.z);
         m.Set(3, 2, -Dot(z, eye));
+
+        return m;
+    }
+
+    Mat4 Ortho(float left, float right, float bot, float top, float zNear, float zFar)
+    {
+        Mat4 m = Mat4();
+
+        m.Set(0, 0, 2.0f / (right - left));
+        m.Set(1, 1, 2.0f / (top - bot));
+        m.Set(2, 2, -2.0f / (zFar - zNear));
+        m.Set(3, 0, -(right + left) / (right - left));
+        m.Set(3, 1, -(top + bot) / (top - bot));
+        m.Set(3, 2, -(zFar + zNear) / (zFar - zNear));
 
         return m;
     }

@@ -56,7 +56,7 @@ namespace Dawn
 
         float Get(int x, int y) const;
         void Set(int x, int y, float val);
-        float* getPtr();
+        float* GetPtr() const;
 
         Mat4 operator*(const Mat4& m) const;
         Vec4 operator*(const Vec4& v) const;
@@ -74,7 +74,10 @@ namespace Dawn
     Vec4 Normalize(const Vec4& v);
 
     Mat4 LookAt(const Vec3& eye, const Vec3& center, const Vec3& up);
+
+    Mat4 Ortho(float left, float right, float bot, float top, float zNear = -1.0f, float zFar = 1.0f);
     Mat4 Perspective(float fov, float aspect, float near, float far);
+
     Mat4 GetTranslationMatrix(const Vec3& v);
     //TODO: make this use euler angles
     Mat4 GetRotationMatrix(const Vec3& axis, const float theta);

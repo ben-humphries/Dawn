@@ -14,6 +14,7 @@
 #include "Render/Image.h"
 #include "Render/Texture.h"
 #include "Render/Framebuffer.h"
+#include "Render/Camera.h"
 
 //DEBUG
 #include "Debug/Profile.h"

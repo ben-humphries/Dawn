@@ -3,6 +3,7 @@
 
 #include "Math/Math.h"
 #include "Texture.h"
+#include "Camera.h"
 
 namespace Dawn
 {
@@ -12,7 +13,7 @@ namespace Dawn
         static void Init();
         static void Terminate();
 
-        static void StartFrame();
+        static void StartFrame(const OrthographicCamera& camera);
         static void Flush();
         static void EndFrame();
 
