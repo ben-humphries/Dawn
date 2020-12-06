@@ -107,8 +107,16 @@ class Playground : public Dawn::Application
         auto render = registry.getComponent<Dawn::RenderComponent>(e);
 
         registry.deleteEntity(e2);
+        //registry.deleteComponent<Dawn::TransformComponent>(e);
 
         Dawn::Entity e4 = registry.addEntity();
+        registry.addComponent<Dawn::TransformComponent>(e4);
+        registry.addComponent<Dawn::RenderComponent>(e4);
+
+        auto list1 = registry.getEntitiesWithComponents<Dawn::TransformComponent, Dawn::RenderComponent>();
+
+        auto list2 = registry.getComponentsOfType<Dawn::TransformComponent>();
+        DAWN_LOG(list2[0]->pos);
 
         transform.pos = 10;
         transform.scale = 4;
