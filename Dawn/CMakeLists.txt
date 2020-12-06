@@ -12,6 +12,8 @@ set(SRC_FILES ${SRC_FILES}
     src/Dawn/Render/Framebuffer.cpp
     src/Dawn/Render/Camera.cpp
 
+    src/Dawn/Scene/ECS.cpp
+
     src/Dawn/Math/Math.cpp
 
     src/Dawn/ImGui/imgui_impl_opengl3.cpp

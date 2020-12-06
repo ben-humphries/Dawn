@@ -91,6 +91,29 @@ class Playground : public Dawn::Application
 
         tex1.loadFromFile("test.png");
         tex2.loadFromFile("test2.png");
+
+        Dawn::EntityRegistry registry;
+        Dawn::Entity e = registry.addEntity();
+        Dawn::Entity e2 = registry.addEntity();
+        Dawn::Entity e3 = registry.addEntity();
+        registry.addComponent<Dawn::TransformComponent>(e);
+        registry.addComponent<Dawn::RenderComponent>(e);
+
+        registry.addComponent<Dawn::TransformComponent>(e2);
+
+        registry.addComponent<Dawn::RenderComponent>(e3);
+
+        Dawn::TransformComponent transform = registry.getComponent<Dawn::TransformComponent>(e);
+        auto render = registry.getComponent<Dawn::RenderComponent>(e);
+
+        registry.deleteEntity(e2);
+
+        Dawn::Entity e4 = registry.addEntity();
+
+        transform.pos = 10;
+        transform.scale = 4;
+        DAWN_LOG(render.test);
+        DAWN_LOG(transform.s_id);
     }
 
     void onImGuiUpdate() override

@@ -4,6 +4,7 @@
 #include <functional>
 #include <sstream>
 #include <unordered_map>
+#include <queue>
 #include <vector>
 #include <string>
 #include <cstdint>

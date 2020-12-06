@@ -16,5 +16,7 @@
 #include "Render/Framebuffer.h"
 #include "Render/Camera.h"
 
+#include "Scene/ECS.h"
+
 //DEBUG
 #include "Debug/Profile.h"
