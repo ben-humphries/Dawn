@@ -1,6 +1,7 @@
 #pragma once
 #include "DawnPCH.h"
 #include "ECSComponent.h"
+#include "Scene/Component.h"
 
 namespace Dawn
 {
@@ -10,7 +11,7 @@ namespace Dawn
     {
        public:
         EntityRegistry()
-            : m_componentLists(currentComponentId), m_entityIndexMaps(currentComponentId)
+            : m_componentLists(BaseComponent::maxId()), m_entityIndexMaps(BaseComponent::maxId())
         {
         }
 
@@ -62,7 +63,7 @@ namespace Dawn
                 nextEntity = m_nextEntity++;
             }
 
-            m_entityBitsets.emplace(nextEntity, std::vector<bool>(currentComponentId));
+            m_entityBitsets.emplace(nextEntity, std::vector<bool>(BaseComponent::maxId()));
 
             return nextEntity;
         }
@@ -71,7 +72,7 @@ namespace Dawn
         {
             if (!entityExists(e)) return;
 
-            for (int i = 0; i < currentComponentId; i++) {
+            for (int i = 0; i < BaseComponent::maxId(); i++) {
                 deleteComponentInternal(i, e);
             }
 

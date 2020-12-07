@@ -31,7 +31,7 @@ namespace Dawn
         inline static size_t s_currentlyAllocated = 0;
         inline static size_t s_allocations = 0;
     };
-}
+}  // namespace Dawn
 
 #ifndef DAWN_MEMORY_MANAGEMENT_OVERLOADED
 #define DAWN_MEMORY_MANAGEMENT_OVERLOADED
@@ -46,11 +46,25 @@ inline void* operator new(size_t size)
     return p;
 }
 
+inline void* operator new[](size_t size)
+{
+    Dawn::Memory::Allocation(size);
+    void* p = malloc(size);
+    return p;
+}
+
 inline void operator delete(void* p, size_t size)
 {
     Dawn::Memory::Deallocation(size);
     free(p);
 }
+
+inline void operator delete[](void* p, size_t size)
+{
+    Dawn::Memory::Deallocation(size);
+    free(p);
+}
+
 #endif
 
 #endif

@@ -9,6 +9,11 @@ namespace Dawn
         {
             return currentComponentId++;
         }
+
+        static uint32_t maxId()
+        {
+            return currentComponentId;
+        }
     };
 
     template <class T>
@@ -18,4 +23,4 @@ namespace Dawn
 
     template <typename T>
     const uint32_t Component<T>::s_id(BaseComponent::nextId());
-}
+}  // namespace Dawn

@@ -1,4 +1,6 @@
 #pragma once
+// clang-format off
+
 #include "DawnPCH.h"
 
 #include "Core/Application.h"
@@ -16,8 +18,7 @@
 #include "Render/Framebuffer.h"
 #include "Render/Camera.h"
 
-#include "Scene/Component.h"
-#include "Scene/ECS/ECSEntity.h"
+#include "Scene/Scene.h"
 
 //DEBUG
 #include "Debug/Profile.h"
