@@ -3,6 +3,9 @@
 #include "ECSComponent.h"
 #include "Scene/Component.h"
 
+//DEBUG
+#include "Debug/Profile.h"
+
 namespace Dawn
 {
     typedef uint32_t Entity;
@@ -92,6 +95,7 @@ namespace Dawn
         template <class... T>
         std::vector<Entity> getEntitiesWithComponents()
         {
+            PROFILE_FUNC();
             std::vector<uint32_t> componentIds = {T::s_id...};
 
             std::vector<Entity> entities;
@@ -108,9 +112,22 @@ namespace Dawn
             return entities;
         }
 
+        std::set<Entity> getEntitiesWithBitset(std::vector<bool> entityBitset)
+        {
+            std::set<Entity> entities;
+
+            for (auto it : m_entityBitsets) {
+                if (it.second == entityBitset)
+                    entities.insert(it.first);
+            }
+            return entities;
+        }
+
         template <class T>
         std::vector<T*> getComponentsOfType()
         {
+            PROFILE_FUNC();
+
             int index = T::s_id;
             std::vector<T*> components;
 
@@ -118,6 +135,11 @@ namespace Dawn
                 components.push_back((T*)componentPtr);
             }
             return components;
+        }
+
+        std::vector<bool> getEntityBitset(Entity e)
+        {
+            return m_entityBitsets[e];
         }
 
        private:

@@ -42,7 +42,6 @@ void DrawSplitter(int split_vertically, float thickness, float* size0, float* si
 class Playground : public Dawn::Application
 {
    public:
-    Dawn::OrthographicCamera camera = Dawn::OrthographicCamera(-1.0, 1.0, -0.5, 0.5);
     float zoom = 1.0f;
 
     Dawn::Vec4 quadColor = Dawn::Vec4(1, 0, 1, 1);
@@ -68,53 +67,45 @@ class Playground : public Dawn::Application
         tex1.loadFromFile("test.png");
         tex2.loadFromFile("test2.png");
 
-        auto& scene_registry = scene.getRegistry();
-
         for (int i = 0; i < 10; i++) {
-            Dawn::Entity e = scene_registry.addEntity();
+            Dawn::Entity e = scene.addEntity();
 
-            scene_registry.addComponent<Dawn::TransformComponent>(e);
-            auto& transform = scene_registry.getComponent<Dawn::TransformComponent>(e);
+            scene.addComponent<Dawn::TransformComponent>(e);
+            auto& transform = scene.getComponent<Dawn::TransformComponent>(e);
             transform.position = Dawn::Vec3(i, 0, 0);
             transform.scale = Dawn::Vec3(0.5);
 
-            scene_registry.addComponent<Dawn::SpriteRendererComponent>(e);
-            auto& spriteRenderer = scene_registry.getComponent<Dawn::SpriteRendererComponent>(e);
+            scene.addComponent<Dawn::SpriteRendererComponent>(e);
+            auto& spriteRenderer = scene.getComponent<Dawn::SpriteRendererComponent>(e);
             spriteRenderer.color = Dawn::Vec4(0.5, 0.6, 0.2, 1);
         }
 
-        //ENTITY TEST
-        // Dawn::EntityRegistry registry;
-        // Dawn::Entity e = registry.addEntity();
-        // Dawn::Entity e2 = registry.addEntity();
-        // Dawn::Entity e3 = registry.addEntity();
-        // registry.addComponent<Dawn::TransformComponent>(e);
-        // registry.addComponent<Dawn::RenderComponent>(e);
+        int quads = 0;
+        for (float x = -1.0; x < 1.0; x += 0.02) {
+            for (float y = -1.0; y < 1.0; y += 0.02) {
+                quads++;
+                Dawn::Texture* tex = nullptr;
+                if (quads % 2 == 0)
+                    tex = &tex1;
+                else {
+                    tex = &tex2;
+                }
 
-        // registry.addComponent<Dawn::TransformComponent>(e2);
+                Dawn::Entity e = scene.addEntity();
 
-        // registry.addComponent<Dawn::RenderComponent>(e3);
+                scene.addComponent<Dawn::TransformComponent>(e);
+                auto& transform = scene.getComponent<Dawn::TransformComponent>(e);
+                transform.position = Dawn::Vec3(x, y, 0);
+                transform.scale = Dawn::Vec3(.02, .02, 1.0);
 
-        // Dawn::TransformComponent transform = registry.getComponent<Dawn::TransformComponent>(e);
-        // auto render = registry.getComponent<Dawn::RenderComponent>(e);
+                scene.addComponent<Dawn::SpriteRendererComponent>(e);
+                auto& spriteRenderer = scene.getComponent<Dawn::SpriteRendererComponent>(e);
+                spriteRenderer.texture = tex;
+                spriteRenderer.color = Dawn::Vec4((x + 1) / 2, (y + 1) / 2, 1.0, 1.0);
+            }
+        }
 
-        // registry.deleteEntity(e2);
-        // //registry.deleteComponent<Dawn::TransformComponent>(e);
-
-        // Dawn::Entity e4 = registry.addEntity();
-        // registry.addComponent<Dawn::TransformComponent>(e4);
-        // registry.addComponent<Dawn::RenderComponent>(e4);
-
-        // auto list1 = registry.getEntitiesWithComponents<Dawn::TransformComponent, Dawn::RenderComponent>();
-
-        // auto list2 = registry.getComponentsOfType<Dawn::TransformComponent>();
-        // DAWN_LOG(list2[0]->pos);
-
-        // transform.pos = 10;
-        // transform.scale = 4;
-        // DAWN_LOG(render.test);
-        // DAWN_LOG(transform.s_id);
-        ///
+        DAWN_LOG(quads);
     }
 
     void onImGuiUpdate() override
@@ -200,52 +191,18 @@ class Playground : public Dawn::Application
         //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         if (viewportPanelSize.x > 0 && viewportPanelSize.y > 0) {
             fb.resize(viewportPanelSize.x, viewportPanelSize.y);
-            float normalizedX = viewportPanelSize.x / sqrt(viewportPanelSize.x * viewportPanelSize.x + viewportPanelSize.y * viewportPanelSize.y);
-            float normalizedY = viewportPanelSize.y / sqrt(viewportPanelSize.x * viewportPanelSize.x + viewportPanelSize.y * viewportPanelSize.y);
 
             float aspectRatio = viewportPanelSize.x / viewportPanelSize.y;
-            //scene.getMainCamera()->setProjection(-aspectRatio * zoom, aspectRatio * zoom, -1.0 * zoom, 1.0 * zoom);
-            camera.setProjection(-aspectRatio * zoom, aspectRatio * zoom, -1.0 * zoom, 1.0 * zoom);
+            scene.getMainCamera()->setProjection(-aspectRatio * zoom, aspectRatio * zoom, -1.0 * zoom, 1.0 * zoom);
         }
 
         fb.bind();
         glClearColor(0.2, 0.2, 0.2, 1.0);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        camera.setPosition(Dawn::Vec3(0, 0, -1));
-        //camera.setRotation(-quadRotation);
+        scene.onUpdate();
 
-        // Dawn::Renderer2D::StartFrame(camera);
-        // //clear color
-
-        // Dawn::Renderer2D::DrawQuad(Dawn::Vec3(0, 0, 0), quadRotation, Dawn::Vec3(1.0), quadColor, &tex2);
-        // Dawn::Renderer2D::DrawQuad(Dawn::Vec3(-0.5, 0, 0), 0, Dawn::Vec3(0.5), Dawn::Vec4(1.0, 1.0, 1.0, 1.0), &tex1);
-        // Dawn::Renderer2D::DrawQuad(Dawn::Vec3(-0.5, -0.5, 0), 0, Dawn::Vec3(0.5), quadColor);
-
-        //scene.onUpdate();
-        scene.getRegistry().getComponentsOfType<Dawn::TransformComponent>();
-
-        // int quads = 0;
-        // for (float x = -1.0; x < 1.0; x += 0.02) {
-        //     for (float y = -1.0; y < 1.0; y += 0.02) {
-        //         quads++;
-        //         Dawn::Texture* tex = nullptr;
-        //         if (quads % 2 == 0)
-        //             tex = &tex1;
-        //         else {
-        //             tex = &tex2;
-        //         }
-
-        //         Dawn::Renderer2D::DrawQuad(Dawn::Vec3(x, y, 0), quadRotation, Dawn::Vec3(0.02, 0.02, 1), quadColor * Dawn::Vec4((x + 1) / 2, (y + 1) / 2, 1.0, 1.0), tex);
-        //     }
-        // }
-
-        //DAWN_LOG(quads);
-
-        //Dawn::Renderer2D::EndFrame();
         fb.unbind();
-
-        //ImGui::Image((ImTextureID)fb.getColorTextureHandle(), ImVec2(1920, 1920));
     }
 
     void onClose() override

@@ -1,6 +1,8 @@
 #pragma once
 #include "DawnPCH.h"
 #include "ECS/ECSEntity.h"
+#include "ECS/ECSSystem.h"
+#include "System.h"
 #include "Render/Camera.h"
 
 namespace Dawn
@@ -14,13 +16,39 @@ namespace Dawn
 
         OrthographicCamera* getMainCamera();
 
-        //TODO: There is probably a better API than this to allow entities to be added/modified from outside of this class.
-        EntityRegistry& getRegistry()
+        Entity addEntity()
         {
-            return m_registry;
+            return m_registry.addEntity();
+        }
+        void deleteEntity(Entity e)
+        {
+            m_registry.deleteEntity(e);
+            m_systemRegistry.entityDeleted(e);
+        }
+        template <class T>
+        void addComponent(Entity e)
+        {
+            m_registry.addComponent<T>(e);
+            m_systemRegistry.entityBitsetChanged(e, m_registry.getEntityBitset(e));
+        }
+        template <class T>
+        void deleteComponent(Entity e)
+        {
+            m_registry.deleteComponent<T>(e);
+            m_systemRegistry.entityBitsetChanged(e, m_registry.getEntityBitset(e));
+        }
+
+        template <class T>
+        T& getComponent(Entity e)
+        {
+            return m_registry.getComponent<T>(e);
         }
 
        private:
         EntityRegistry m_registry;
+        SystemRegistry m_systemRegistry;
+
+        RenderSystem* m_renderSystem;
+        CameraSystem* m_cameraSystem;
     };
 }  // namespace Dawn

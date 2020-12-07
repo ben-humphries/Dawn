@@ -2,35 +2,36 @@
 
 #include "Component.h"
 #include "Render/Renderer2D.h"
-
-//Temp
-#include "Core/Log.h"
+#include "System.h"
 
 namespace Dawn
 {
     Scene::Scene()
     {
-        Entity mainCamera = m_registry.addEntity();
-        m_registry.addComponent<CameraComponent>(mainCamera);
-        auto& cameraComponent = m_registry.getComponent<CameraComponent>(mainCamera);
+        //Add main camera
+        Entity mainCamera = addEntity();
+        addComponent<CameraComponent>(mainCamera);
+        auto& cameraComponent = getComponent<CameraComponent>(mainCamera);
         cameraComponent.camera = new Dawn::OrthographicCamera(-1.0, 1.0, -0.5, 0.5);
         cameraComponent.camera->setPosition(Vec3(0, 0, -1));
         cameraComponent.primary = true;
+
+        //Initialize systems
+        m_renderSystem = m_systemRegistry.addSystem<RenderSystem>(&m_registry);
+        m_cameraSystem = m_systemRegistry.addSystem<CameraSystem>(&m_registry);
     }
 
     void Scene::onUpdate()
     {
-        OrthographicCamera* mainCamera = getMainCamera();
+        PROFILE_FUNC();
+
+        OrthographicCamera* mainCamera = m_cameraSystem->getMainCamera();
 
         if (mainCamera) {
+            //These Renderer2D functions could be contained within RenderSystem
             Renderer2D::StartFrame(*mainCamera);
 
-            for (auto entity : m_registry.getEntitiesWithComponents<TransformComponent, SpriteRendererComponent>()) {
-                auto& transform = m_registry.getComponent<TransformComponent>(entity);
-                auto& spriteRenderer = m_registry.getComponent<SpriteRendererComponent>(entity);
-
-                Renderer2D::DrawQuad(transform.position, transform.rotation, transform.scale, spriteRenderer.color, spriteRenderer.texture);
-            }
+            m_renderSystem->onUpdate();
 
             Renderer2D::EndFrame();
         }
@@ -38,15 +39,7 @@ namespace Dawn
 
     OrthographicCamera* Scene::getMainCamera()
     {
-        OrthographicCamera* mainCamera = nullptr;
-
-        for (auto entity : m_registry.getEntitiesWithComponents<CameraComponent>()) {
-            auto& cameraComponent = m_registry.getComponent<CameraComponent>(entity);
-            if (cameraComponent.primary) {
-                mainCamera = cameraComponent.camera;
-            }
-        }
-
-        return mainCamera;
+        PROFILE_FUNC();
+        return m_cameraSystem->getMainCamera();
     }
 }  // namespace Dawn

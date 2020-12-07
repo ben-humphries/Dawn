@@ -33,6 +33,8 @@ namespace Dawn
     };
 }  // namespace Dawn
 
+#if FALSE  //Disable overloading for now
+
 #ifndef DAWN_MEMORY_MANAGEMENT_OVERLOADED
 #define DAWN_MEMORY_MANAGEMENT_OVERLOADED
 
@@ -64,6 +66,8 @@ inline void operator delete[](void* p, size_t size)
     Dawn::Memory::Deallocation(size);
     free(p);
 }
+
+#endif
 
 #endif
 
