@@ -63,12 +63,23 @@ namespace Dawn
         void entityBitsetChanged(Entity e, std::vector<bool> entityBitset)
         {
             for (auto system : m_systems) {
-                if (system->m_entityBitset == entityBitset) {
+                if (entityBitsetMatch(entityBitset, system->m_entityBitset)) {
                     system->m_entities.insert(e);
                 } else {
                     system->m_entities.erase(e);
                 }
             }
+        }
+
+       private:
+        bool entityBitsetMatch(std::vector<bool>& entityBitset, std::vector<bool>& systemBitset)
+        {
+            for (int i = 0; i < systemBitset.size(); i++) {
+                if (systemBitset[i] && !entityBitset[i])
+                    return false;
+            }
+
+            return true;
         }
 
        private:

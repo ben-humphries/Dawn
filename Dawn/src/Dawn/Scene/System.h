@@ -40,4 +40,29 @@ namespace Dawn
             }
         }
     };
+
+    //This may need to be changed as the order that the entities are iterated through matters. Nested children need to be updated first
+    class ParentChildSystem : public System<ChildComponent, TransformComponent>
+    {
+       public:
+        ParentChildSystem(EntityRegistry* registry)
+            : System(registry){};
+
+        void onUpdate()
+        {
+            for (auto e : m_entities) {
+                auto& childComponent = m_registry->getComponent<ChildComponent>(e);
+
+                if (!m_registry->hasComponent<TransformComponent>(childComponent.parent))
+                    return;
+
+                auto& transform = m_registry->getComponent<TransformComponent>(e);
+                auto& parentTransform = m_registry->getComponent<TransformComponent>(childComponent.parent);
+
+                transform.position = parentTransform.position + childComponent.localPosition;
+                transform.rotation = parentTransform.rotation + childComponent.localRotation;
+                transform.scale = parentTransform.scale * childComponent.localScale;
+            }
+        }
+    };
 };

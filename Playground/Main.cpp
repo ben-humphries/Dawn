@@ -51,6 +51,8 @@ class Playground : public Dawn::Application
     Dawn::Texture tex1;
     Dawn::Texture tex2;
 
+    Dawn::Entity parent;
+
     //get window width and height
     Dawn::Framebuffer fb = Dawn::Framebuffer(1920, 1920);
 
@@ -67,6 +69,11 @@ class Playground : public Dawn::Application
         tex1.loadFromFile("test.png");
         tex2.loadFromFile("test2.png");
 
+        parent = scene.addEntity();
+        scene.addComponent<Dawn::TransformComponent>(parent);
+        scene.addComponent<Dawn::ParentComponent>(parent);
+        auto& parentComponent = scene.getComponent<Dawn::ParentComponent>(parent);
+
         for (int i = 0; i < 10; i++) {
             Dawn::Entity e = scene.addEntity();
 
@@ -78,34 +85,42 @@ class Playground : public Dawn::Application
             scene.addComponent<Dawn::SpriteRendererComponent>(e);
             auto& spriteRenderer = scene.getComponent<Dawn::SpriteRendererComponent>(e);
             spriteRenderer.color = Dawn::Vec4(0.5, 0.6, 0.2, 1);
+
+            scene.addComponent<Dawn::ChildComponent>(e);
+            auto& childComponent = scene.getComponent<Dawn::ChildComponent>(e);
+            childComponent.parent = parent;
+            childComponent.localPosition = Dawn::Vec3(i, 0, 0);
+            childComponent.localScale = Dawn::Vec3(0.5);
+
+            parentComponent.children.push_back(e);
         }
 
-        int quads = 0;
-        for (float x = -1.0; x < 1.0; x += 0.02) {
-            for (float y = -1.0; y < 1.0; y += 0.02) {
-                quads++;
-                Dawn::Texture* tex = nullptr;
-                if (quads % 2 == 0)
-                    tex = &tex1;
-                else {
-                    tex = &tex2;
-                }
+        // int quads = 0;
+        // for (float x = -1.0; x < 1.0; x += 0.02) {
+        //     for (float y = -1.0; y < 1.0; y += 0.02) {
+        //         quads++;
+        //         Dawn::Texture* tex = nullptr;
+        //         if (quads % 2 == 0)
+        //             tex = &tex1;
+        //         else {
+        //             tex = &tex2;
+        //         }
 
-                Dawn::Entity e = scene.addEntity();
+        //         Dawn::Entity e = scene.addEntity();
 
-                scene.addComponent<Dawn::TransformComponent>(e);
-                auto& transform = scene.getComponent<Dawn::TransformComponent>(e);
-                transform.position = Dawn::Vec3(x, y, 0);
-                transform.scale = Dawn::Vec3(.02, .02, 1.0);
+        //         scene.addComponent<Dawn::TransformComponent>(e);
+        //         auto& transform = scene.getComponent<Dawn::TransformComponent>(e);
+        //         transform.position = Dawn::Vec3(x, y, 0);
+        //         transform.scale = Dawn::Vec3(.02, .02, 1.0);
 
-                scene.addComponent<Dawn::SpriteRendererComponent>(e);
-                auto& spriteRenderer = scene.getComponent<Dawn::SpriteRendererComponent>(e);
-                spriteRenderer.texture = tex;
-                spriteRenderer.color = Dawn::Vec4((x + 1) / 2, (y + 1) / 2, 1.0, 1.0);
-            }
-        }
+        //         scene.addComponent<Dawn::SpriteRendererComponent>(e);
+        //         auto& spriteRenderer = scene.getComponent<Dawn::SpriteRendererComponent>(e);
+        //         spriteRenderer.texture = tex;
+        //         spriteRenderer.color = Dawn::Vec4((x + 1) / 2, (y + 1) / 2, 1.0, 1.0);
+        //     }
+        // }
 
-        DAWN_LOG(quads);
+        // DAWN_LOG(quads);
     }
 
     void onImGuiUpdate() override
@@ -144,6 +159,11 @@ class Playground : public Dawn::Application
         ImGui::DragFloat("rotation", &quadRotation, 0.1f, 0.f, 6.28f, NULL, 1.f);
         ImGui::DragFloat("position", &quadPosition, 0.1f, -1.f, 1.0f, NULL, 1.f);
         ImGui::DragFloat("camera zoom", &zoom, 0.1f, 0.0f, 10.0f, NULL, 1.f);
+
+        auto& transform = scene.getComponent<Dawn::TransformComponent>(parent);
+        ImGui::DragFloat3("parent position", (float*)&transform.position, 0.1f, -10.0f, 10.0f, NULL, 1.f);
+        ImGui::DragFloat("parent rotation", &transform.rotation, 0.1f, 0.f, 6.28f, NULL, 1.f);
+        ImGui::DragFloat3("parent scale", (float*)&transform.scale, 0.1f, -10.0f, 10.0f, NULL, 1.f);
 
         std::string fps = "FPS: " + std::to_string(1.0f / Dawn::Time::deltaTime);
         ImGui::TextColored(ImVec4(1, 0, 0, 1), fps.c_str());

@@ -7,6 +7,8 @@
 
 namespace Dawn
 {
+    typedef uint32_t Entity;
+
     struct TransformComponent : public Component<TransformComponent> {
         Vec3 position = Vec3(0.0f, 0.0f, 0.0f);
         float rotation = 0.0f;
@@ -22,5 +24,17 @@ namespace Dawn
     struct CameraComponent : public Component<CameraComponent> {
         OrthographicCamera* camera = nullptr;
         bool primary = false;
+    };
+
+    struct ParentComponent : public Component<ParentComponent> {
+        std::vector<Entity> children;
+    };
+
+    struct ChildComponent : public Component<ChildComponent> {
+        Entity parent;
+
+        Vec3 localPosition = Vec3(0.0f, 0.0f, 0.0f);
+        float localRotation = 0.0f;
+        Vec3 localScale = Vec3(1.0f, 1.0f, 1.0f);
     };
 }  // namespace Dawn

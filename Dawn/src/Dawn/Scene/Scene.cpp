@@ -19,6 +19,7 @@ namespace Dawn
         //Initialize systems
         m_renderSystem = m_systemRegistry.addSystem<RenderSystem>(&m_registry);
         m_cameraSystem = m_systemRegistry.addSystem<CameraSystem>(&m_registry);
+        m_parentChildSystem = m_systemRegistry.addSystem<ParentChildSystem>(&m_registry);
     }
 
     void Scene::onUpdate()
@@ -31,6 +32,7 @@ namespace Dawn
             //These Renderer2D functions could be contained within RenderSystem
             Renderer2D::StartFrame(*mainCamera);
 
+            m_parentChildSystem->onUpdate();
             m_renderSystem->onUpdate();
 
             Renderer2D::EndFrame();

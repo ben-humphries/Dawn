@@ -22,6 +22,15 @@ namespace Dawn
         }
         void deleteEntity(Entity e)
         {
+            //If entity has Parent component, loop through children and remove the child component from them.
+            if (m_registry.hasComponent<ParentComponent>(e)) {
+                auto& parentComponent = m_registry.getComponent<ParentComponent>(e);
+
+                for (auto& child : parentComponent.children) {
+                    deleteComponent<ChildComponent>(child);
+                }
+            }
+
             m_registry.deleteEntity(e);
             m_systemRegistry.entityDeleted(e);
         }
@@ -50,5 +59,6 @@ namespace Dawn
 
         RenderSystem* m_renderSystem;
         CameraSystem* m_cameraSystem;
+        ParentChildSystem* m_parentChildSystem;
     };
 }  // namespace Dawn
