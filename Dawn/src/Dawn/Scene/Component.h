@@ -32,9 +32,5 @@ namespace Dawn
 
     struct ChildComponent : public Component<ChildComponent> {
         Entity parent;
-
-        Vec3 localPosition = Vec3(0.0f, 0.0f, 0.0f);
-        float localRotation = 0.0f;
-        Vec3 localScale = Vec3(1.0f, 1.0f, 1.0f);
     };
 }  // namespace Dawn

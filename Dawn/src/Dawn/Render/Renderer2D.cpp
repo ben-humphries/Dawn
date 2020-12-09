@@ -229,7 +229,7 @@ namespace Dawn
         currentBatches = 0;
     }
 
-    void Renderer2D::DrawQuad(Vec3 position, float rotation, Vec3 scale, Vec4 color, Texture* texture)
+    void Renderer2D::DrawQuad(Vec3& position, float rotation, Vec3& scale, Vec4& color, Texture* texture)
     {
         Mat4 translationMatrix = GetTranslationMatrix(position);
         Mat4 rotationMatrix = GetRotationMatrix(Vec3(0, 0, -1), rotation);
@@ -237,6 +237,11 @@ namespace Dawn
 
         Mat4 modelMatrix = GetModelMatrix(translationMatrix, rotationMatrix, scaleMatrix);
 
+        DrawQuad(modelMatrix, color, texture);
+    }
+
+    void Renderer2D::DrawQuad(Mat4& modelMatrix, Vec4& color, Texture* texture)
+    {
         int texIndex;
         bool alreadyLoaded = false;
         if (!texture)

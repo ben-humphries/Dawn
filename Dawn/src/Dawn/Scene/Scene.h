@@ -59,6 +59,5 @@ namespace Dawn
 
         RenderSystem* m_renderSystem;
         CameraSystem* m_cameraSystem;
-        ParentChildSystem* m_parentChildSystem;
     };
 }  // namespace Dawn

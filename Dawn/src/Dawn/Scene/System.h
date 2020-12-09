@@ -20,7 +20,31 @@ namespace Dawn
             for (auto e : m_entities) {
                 auto& transform = m_registry->getComponent<TransformComponent>(e);
                 auto& spriteRenderer = m_registry->getComponent<SpriteRendererComponent>(e);
-                Renderer2D::DrawQuad(transform.position, transform.rotation, transform.scale, spriteRenderer.color, spriteRenderer.texture);
+
+                const Vec3 axis = Vec3(0, 0, 1);
+
+                Mat4 modelMatrix = GetModelMatrix(
+                    GetTranslationMatrix(transform.position),
+                    GetRotationMatrix(axis, transform.rotation),
+                    GetScaleMatrix(transform.scale));
+
+                Entity current = e;
+
+                //If there is a child component, apply transformations relative to its transform before submitting to the renderer
+                while (m_registry->hasComponent<ChildComponent>(current)) {
+                    auto& childComponent = m_registry->getComponent<ChildComponent>(current);
+                    if (m_registry->hasComponent<TransformComponent>(childComponent.parent)) {
+                        auto& parentTransform = m_registry->getComponent<TransformComponent>(childComponent.parent);
+
+                        modelMatrix = GetModelMatrix(GetTranslationMatrix(parentTransform.position),
+                                                     GetRotationMatrix(axis, parentTransform.rotation),
+                                                     GetScaleMatrix(parentTransform.scale)) *
+                                      modelMatrix;
+                        current = childComponent.parent;
+                    }
+                }
+
+                Renderer2D::DrawQuad(modelMatrix, spriteRenderer.color, spriteRenderer.texture);
             }
         }
     };
@@ -37,31 +61,6 @@ namespace Dawn
                 auto& cameraComponent = m_registry->getComponent<CameraComponent>(e);
                 if (cameraComponent.primary)
                     return cameraComponent.camera;
-            }
-        }
-    };
-
-    //This may need to be changed as the order that the entities are iterated through matters. Nested children need to be updated first
-    class ParentChildSystem : public System<ChildComponent, TransformComponent>
-    {
-       public:
-        ParentChildSystem(EntityRegistry* registry)
-            : System(registry){};
-
-        void onUpdate()
-        {
-            for (auto e : m_entities) {
-                auto& childComponent = m_registry->getComponent<ChildComponent>(e);
-
-                if (!m_registry->hasComponent<TransformComponent>(childComponent.parent))
-                    return;
-
-                auto& transform = m_registry->getComponent<TransformComponent>(e);
-                auto& parentTransform = m_registry->getComponent<TransformComponent>(childComponent.parent);
-
-                transform.position = parentTransform.position + childComponent.localPosition;
-                transform.rotation = parentTransform.rotation + childComponent.localRotation;
-                transform.scale = parentTransform.scale * childComponent.localScale;
             }
         }
     };

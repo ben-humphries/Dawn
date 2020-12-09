@@ -17,6 +17,7 @@ namespace Dawn
         static void Flush();
         static void EndFrame();
 
-        static void DrawQuad(Vec3 position, float rotation, Vec3 scale, Vec4 color, Texture* texture = nullptr);
+        static void DrawQuad(Vec3& position, float rotation, Vec3& scale, Vec4& color, Texture* texture = nullptr);
+        static void DrawQuad(Mat4& modelMatrix, Vec4& color, Texture* texture = nullptr);
     };
 }

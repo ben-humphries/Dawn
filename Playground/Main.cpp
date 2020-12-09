@@ -44,13 +44,10 @@ class Playground : public Dawn::Application
    public:
     float zoom = 1.0f;
 
-    Dawn::Vec4 quadColor = Dawn::Vec4(1, 0, 1, 1);
-    float quadRotation = 0;
-    float quadPosition = 0;
-
     Dawn::Texture tex1;
     Dawn::Texture tex2;
 
+    Dawn::Entity parentsParent;
     Dawn::Entity parent;
 
     //get window width and height
@@ -69,10 +66,28 @@ class Playground : public Dawn::Application
         tex1.loadFromFile("test.png");
         tex2.loadFromFile("test2.png");
 
+        parentsParent = scene.addEntity();
+        scene.addComponent<Dawn::TransformComponent>(parentsParent);
+        scene.addComponent<Dawn::ParentComponent>(parentsParent);
+        scene.addComponent<Dawn::SpriteRendererComponent>(parentsParent);
+        auto& parentsParentSprite = scene.getComponent<Dawn::SpriteRendererComponent>(parentsParent);
+        parentsParentSprite.texture = &tex2;
+
+        auto& parentsParentComponent = scene.getComponent<Dawn::ParentComponent>(parentsParent);
+
         parent = scene.addEntity();
         scene.addComponent<Dawn::TransformComponent>(parent);
         scene.addComponent<Dawn::ParentComponent>(parent);
+        scene.addComponent<Dawn::SpriteRendererComponent>(parent);
+        auto& parentSprite = scene.getComponent<Dawn::SpriteRendererComponent>(parent);
+        parentSprite.texture = &tex1;
+        scene.addComponent<Dawn::ChildComponent>(parent);
+        auto& parentChildComponent = scene.getComponent<Dawn::ChildComponent>(parent);
+        parentChildComponent.parent = parentsParent;
+
         auto& parentComponent = scene.getComponent<Dawn::ParentComponent>(parent);
+
+        parentsParentComponent.children.push_back(parent);
 
         for (int i = 0; i < 10; i++) {
             Dawn::Entity e = scene.addEntity();
@@ -81,6 +96,7 @@ class Playground : public Dawn::Application
             auto& transform = scene.getComponent<Dawn::TransformComponent>(e);
             transform.position = Dawn::Vec3(i, 0, 0);
             transform.scale = Dawn::Vec3(0.5);
+            transform.rotation = i;
 
             scene.addComponent<Dawn::SpriteRendererComponent>(e);
             auto& spriteRenderer = scene.getComponent<Dawn::SpriteRendererComponent>(e);
@@ -89,8 +105,6 @@ class Playground : public Dawn::Application
             scene.addComponent<Dawn::ChildComponent>(e);
             auto& childComponent = scene.getComponent<Dawn::ChildComponent>(e);
             childComponent.parent = parent;
-            childComponent.localPosition = Dawn::Vec3(i, 0, 0);
-            childComponent.localScale = Dawn::Vec3(0.5);
 
             parentComponent.children.push_back(e);
         }
@@ -155,10 +169,12 @@ class Playground : public Dawn::Application
         //LEFT PANEL
         DrawSplitter(false, 10, &leftPanelSizeLeft, &leftPanelSizeRight, 400, 0);
         ImGui::BeginChild("Left Panel", ImVec2(leftPanelSizeLeft, getWindow().getHeight() - menuBarSize.y), true);
-        ImGui::ColorPicker4("quad color", (float*)&quadColor);
-        ImGui::DragFloat("rotation", &quadRotation, 0.1f, 0.f, 6.28f, NULL, 1.f);
-        ImGui::DragFloat("position", &quadPosition, 0.1f, -1.f, 1.0f, NULL, 1.f);
         ImGui::DragFloat("camera zoom", &zoom, 0.1f, 0.0f, 10.0f, NULL, 1.f);
+
+        auto& ptransform = scene.getComponent<Dawn::TransformComponent>(parentsParent);
+        ImGui::DragFloat3("parentsParent position", (float*)&ptransform.position, 0.1f, -10.0f, 10.0f, NULL, 1.f);
+        ImGui::DragFloat("parentsParent rotation", &ptransform.rotation, 0.1f, 0.f, 6.28f, NULL, 1.f);
+        ImGui::DragFloat3("parentsParent scale", (float*)&ptransform.scale, 0.1f, -10.0f, 10.0f, NULL, 1.f);
 
         auto& transform = scene.getComponent<Dawn::TransformComponent>(parent);
         ImGui::DragFloat3("parent position", (float*)&transform.position, 0.1f, -10.0f, 10.0f, NULL, 1.f);
