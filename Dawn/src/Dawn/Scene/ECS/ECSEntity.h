@@ -24,7 +24,7 @@ namespace Dawn
             int index = T::s_id;
 
             //Can't add duplicate components
-            if (m_entityBitsets[e][index])
+            if (m_entityBitsets[e].size() > index && m_entityBitsets[e][index])
                 return;
 
             m_componentLists[index].push_back(new T());

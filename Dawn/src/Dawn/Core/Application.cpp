@@ -73,4 +73,9 @@ namespace Dawn
     {
         return *m_window;
     }
+
+    void Application::clearWindow()
+    {
+        m_window->clear();
+    }
 }  // namespace Dawn

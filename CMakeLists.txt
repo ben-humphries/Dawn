@@ -11,3 +11,4 @@ project(Dawn)
 
 add_subdirectory(Dawn)
 add_subdirectory(Playground)
+add_subdirectory(DawnEditor)

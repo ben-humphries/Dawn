@@ -1,10 +1,8 @@
 #pragma once
+#include "../ImGui/DawnImGuiContext.h"
 #include "DawnPCH.h"
-
 #include "Event.h"
 #include "Window.h"
-
-#include "../ImGui/DawnImGuiContext.h"
 
 #define DAWN_IMGUI
 
@@ -28,6 +26,7 @@ namespace Dawn
 
        protected:
         Window& getWindow();
+        void clearWindow();
 
        private:
         void onEngineUpdate();

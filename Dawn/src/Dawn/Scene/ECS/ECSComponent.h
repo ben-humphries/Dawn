@@ -3,17 +3,12 @@
 
 namespace Dawn
 {
-    static uint32_t currentComponentId = 0;
-    struct BaseComponent {
-        static uint32_t nextId()
-        {
-            return currentComponentId++;
-        }
+    extern uint32_t currentComponentId;
 
-        static uint32_t maxId()
-        {
-            return currentComponentId;
-        }
+    struct BaseComponent {
+        static uint32_t nextId();
+
+        static uint32_t maxId();
     };
 
     template <class T>

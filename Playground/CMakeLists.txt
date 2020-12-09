@@ -5,4 +5,3 @@ set(SRC_FILES ${SRC_FILES}
 add_executable(Playground ${SRC_FILES})
 
 target_link_libraries(Playground PRIVATE Dawn)
-
