@@ -31,6 +31,7 @@ namespace Dawn
                 Entity current = e;
 
                 //If there is a child component, apply transformations relative to its transform before submitting to the renderer
+                //TODO: these should probably eventually be localToWorld() functions or something like that so they can be used in collision and stuff later
                 while (m_registry->hasComponent<ChildComponent>(current)) {
                     auto& childComponent = m_registry->getComponent<ChildComponent>(current);
                     if (m_registry->hasComponent<TransformComponent>(childComponent.parent)) {

@@ -68,12 +68,9 @@ class Playground : public Dawn::Application
 
         parentsParent = scene.addEntity();
         scene.addComponent<Dawn::TransformComponent>(parentsParent);
-        scene.addComponent<Dawn::ParentComponent>(parentsParent);
         scene.addComponent<Dawn::SpriteRendererComponent>(parentsParent);
         auto& parentsParentSprite = scene.getComponent<Dawn::SpriteRendererComponent>(parentsParent);
         parentsParentSprite.texture = &tex2;
-
-        auto& parentsParentComponent = scene.getComponent<Dawn::ParentComponent>(parentsParent);
 
         parent = scene.addEntity();
         scene.addComponent<Dawn::TransformComponent>(parent);
@@ -81,13 +78,8 @@ class Playground : public Dawn::Application
         scene.addComponent<Dawn::SpriteRendererComponent>(parent);
         auto& parentSprite = scene.getComponent<Dawn::SpriteRendererComponent>(parent);
         parentSprite.texture = &tex1;
-        scene.addComponent<Dawn::ChildComponent>(parent);
-        auto& parentChildComponent = scene.getComponent<Dawn::ChildComponent>(parent);
-        parentChildComponent.parent = parentsParent;
 
-        auto& parentComponent = scene.getComponent<Dawn::ParentComponent>(parent);
-
-        parentsParentComponent.children.push_back(parent);
+        scene.makeEntityChild(parent, parentsParent);
 
         for (int i = 0; i < 10; i++) {
             Dawn::Entity e = scene.addEntity();
@@ -102,11 +94,7 @@ class Playground : public Dawn::Application
             auto& spriteRenderer = scene.getComponent<Dawn::SpriteRendererComponent>(e);
             spriteRenderer.color = Dawn::Vec4(0.5, 0.6, 0.2, 1);
 
-            scene.addComponent<Dawn::ChildComponent>(e);
-            auto& childComponent = scene.getComponent<Dawn::ChildComponent>(e);
-            childComponent.parent = parent;
-
-            parentComponent.children.push_back(e);
+            scene.makeEntityChild(e, parent);
         }
 
         // int quads = 0;

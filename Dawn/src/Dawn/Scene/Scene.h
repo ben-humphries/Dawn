@@ -20,6 +20,7 @@ namespace Dawn
         {
             return m_registry.addEntity();
         }
+
         void deleteEntity(Entity e)
         {
             //If entity has Parent component, loop through children and remove the child component from them.
@@ -34,12 +35,33 @@ namespace Dawn
             m_registry.deleteEntity(e);
             m_systemRegistry.entityDeleted(e);
         }
+
+        void makeEntityChild(Entity e, Entity parent)
+        {
+            //If parent is null, remove child.
+            if (!parent) {
+                if (hasComponent<ChildComponent>(e))
+                    deleteComponent<ChildComponent>(e);
+            }
+
+            if (!hasComponent<ParentComponent>(parent))
+                addComponent<ParentComponent>(parent);
+            auto& parentComponent = getComponent<ParentComponent>(parent);
+            parentComponent.children.push_back(e);
+
+            if (!hasComponent<ChildComponent>(e))
+                addComponent<ChildComponent>(e);
+            auto& childComponent = getComponent<ChildComponent>(e);
+            childComponent.parent = parent;
+        }
+
         template <class T>
         void addComponent(Entity e)
         {
             m_registry.addComponent<T>(e);
             m_systemRegistry.entityBitsetChanged(e, m_registry.getEntityBitset(e));
         }
+
         template <class T>
         void deleteComponent(Entity e)
         {
@@ -51,6 +73,12 @@ namespace Dawn
         T& getComponent(Entity e)
         {
             return m_registry.getComponent<T>(e);
+        }
+
+        template <class T>
+        bool hasComponent(Entity e)
+        {
+            return m_registry.hasComponent<T>(e);
         }
 
        private:
