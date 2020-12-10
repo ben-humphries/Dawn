@@ -1,6 +1,5 @@
 #pragma once
 #include "DawnPCH.h"
-
 #include "ECSEntity.h"
 
 namespace Dawn
@@ -10,10 +9,6 @@ namespace Dawn
        public:
         BaseSystem(EntityRegistry* registry)
             : m_registry(registry), m_entityBitset(std::vector<bool>(BaseComponent::maxId())){};
-        void updateEntityList()
-        {
-            m_entities = m_registry->getEntitiesWithBitset(m_entityBitset);
-        }
 
        protected:
         EntityRegistry* m_registry;
@@ -37,8 +32,26 @@ namespace Dawn
                 m_entityBitset[id] = true;
             }
 
-            updateEntityList();
+            for (auto& e : m_registry->getAllEntitiesSet()) {
+                auto entityBitset = m_registry->getEntityBitset(e);
+                if (entityBitsetMatch(entityBitset, this->m_entityBitset)) {
+                    this->m_entities.insert(e);
+                } else {
+                    this->m_entities.erase(e);
+                }
+            }
         };
+
+       private:
+        bool entityBitsetMatch(std::vector<bool>& entityBitset, std::vector<bool>& systemBitset)
+        {
+            for (int i = 0; i < systemBitset.size(); i++) {
+                if (systemBitset[i] && !entityBitset[i])
+                    return false;
+            }
+
+            return true;
+        }
     };
 
     class SystemRegistry
@@ -60,9 +73,10 @@ namespace Dawn
             }
         }
 
-        void entityBitsetChanged(Entity e, std::vector<bool> entityBitset)
+        void entityBitsetChanged(Entity e)
         {
             for (auto system : m_systems) {
+                auto entityBitset = system->m_registry->getEntityBitset(e);
                 if (entityBitsetMatch(entityBitset, system->m_entityBitset)) {
                     system->m_entities.insert(e);
                 } else {
@@ -85,4 +99,4 @@ namespace Dawn
        private:
         std::vector<BaseSystem*> m_systems;
     };
-}
+}  // namespace Dawn

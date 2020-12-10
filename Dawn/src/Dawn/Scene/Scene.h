@@ -2,8 +2,8 @@
 #include "DawnPCH.h"
 #include "ECS/ECSEntity.h"
 #include "ECS/ECSSystem.h"
-#include "System.h"
 #include "Render/Camera.h"
+#include "System.h"
 
 namespace Dawn
 {
@@ -18,7 +18,9 @@ namespace Dawn
 
         Entity addEntity()
         {
-            return m_registry.addEntity();
+            Entity e = m_registry.addEntity();
+            m_registry.addComponent<TagComponent>(e);
+            return e;
         }
 
         void deleteEntity(Entity e)
@@ -59,14 +61,14 @@ namespace Dawn
         void addComponent(Entity e)
         {
             m_registry.addComponent<T>(e);
-            m_systemRegistry.entityBitsetChanged(e, m_registry.getEntityBitset(e));
+            m_systemRegistry.entityBitsetChanged(e);
         }
 
         template <class T>
         void deleteComponent(Entity e)
         {
             m_registry.deleteComponent<T>(e);
-            m_systemRegistry.entityBitsetChanged(e, m_registry.getEntityBitset(e));
+            m_systemRegistry.entityBitsetChanged(e);
         }
 
         template <class T>
@@ -79,6 +81,11 @@ namespace Dawn
         bool hasComponent(Entity e)
         {
             return m_registry.hasComponent<T>(e);
+        }
+
+        EntityRegistry* getRegistry()
+        {
+            return &m_registry;
         }
 
        private:

@@ -9,6 +9,10 @@ namespace Dawn
 {
     typedef uint32_t Entity;
 
+    struct TagComponent : public Component<TagComponent> {
+        std::string tag = "Entity";
+    };
+
     struct TransformComponent : public Component<TransformComponent> {
         Vec3 position = Vec3(0.0f, 0.0f, 0.0f);
         float rotation = 0.0f;

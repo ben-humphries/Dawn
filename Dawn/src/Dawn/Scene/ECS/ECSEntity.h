@@ -142,6 +142,17 @@ namespace Dawn
             return m_entityBitsets[e];
         }
 
+        std::set<Entity> getAllEntitiesSet()
+        {
+            std::set<Entity> entities;
+
+            for (auto& pair : m_entityBitsets) {
+                entities.insert(pair.first);
+            }
+
+            return entities;
+        }
+
        private:
         void deleteComponentInternal(int componentId, Entity e)
         {
