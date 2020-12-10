@@ -2,6 +2,6 @@
 
 int main()
 {
-    DawnEditor editor = DawnEditor();
+    Dawn::DawnEditor editor = Dawn::DawnEditor();
     editor.start();
 }

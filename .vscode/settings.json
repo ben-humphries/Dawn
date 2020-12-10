@@ -46,7 +46,8 @@
         "chrono": "cpp",
         "codecvt": "cpp",
         "ctime": "cpp",
-        "ratio": "cpp"
+        "ratio": "cpp",
+        "set": "cpp"
     },
     //clang-format settings
     "editor.formatOnSave": true,
