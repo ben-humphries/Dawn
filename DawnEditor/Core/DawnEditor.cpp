@@ -1,42 +1,25 @@
 #include "DawnEditor.h"
 
-void DrawSplitter(int split_vertically, float thickness, float* size0, float* size1, float min_size0, float min_size1)
-{
-    ImVec2 backup_pos = ImGui::GetCursorPos();
-    if (split_vertically)
-        ImGui::SetCursorPosY(backup_pos.y + *size0);
-    else
-        ImGui::SetCursorPosX(backup_pos.x + *size0);
-
-    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
-    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0, 0, 0));  // We don't draw while active/pressed because as we move the panes the splitter button will be 1 frame late
-    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.6f, 0.6f, 0.6f, 0.10f));
-    ImGui::Button("##Splitter", ImVec2(!split_vertically ? thickness : -1.0f, split_vertically ? thickness : -1.0f));
-    ImGui::PopStyleColor(3);
-
-    ImGui::SetItemAllowOverlap();  // This is to allow having other buttons OVER our splitter.
-
-    if (ImGui::IsItemActive()) {
-        float mouse_delta = split_vertically ? ImGui::GetIO().MouseDelta.y : ImGui::GetIO().MouseDelta.x;
-
-        //Minimum pane size
-        if (mouse_delta < min_size0 - *size0)
-            mouse_delta = min_size0 - *size0;
-        if (mouse_delta > *size1 - min_size1)
-            mouse_delta = *size1 - min_size1;
-
-        // Apply resize
-        *size0 += mouse_delta;
-        *size1 -= mouse_delta;
-    }
-    ImGui::SetCursorPos(backup_pos);
-}
-
 namespace Dawn
 {
     DawnEditor::DawnEditor()
-        : m_sceneHierarchyPanel(&scene)
+        : m_sceneHierarchyPanel(&scene),
+          m_inspectorPanel(&scene)
     {
+        //IMGUI STYLE
+        ImGuiStyle& style = ImGui::GetStyle();
+        style.Colors[ImGuiCol_WindowBg] = ImVec4(.15f, .15f, .15f, 1.0f);
+        style.Colors[ImGuiCol_TitleBg] = ImVec4(.051f, .051f, .051f, 1.0f);
+        style.Colors[ImGuiCol_TitleBgActive] = ImVec4(.051f, .051f, .051f, 1.0f);
+        style.Colors[ImGuiCol_Header] = ImVec4(.49f, .558f, .638f, .310f);
+        style.Colors[ImGuiCol_HeaderHovered] = ImVec4(.618f, .618f, .618f, .8f);
+        style.Colors[ImGuiCol_HeaderActive] = ImVec4(.389f, .389f, .389f, 1.0f);
+        style.Colors[ImGuiCol_FrameBg] = ImVec4(.49f, .558f, .638f, .310f);
+        style.Colors[ImGuiCol_FrameBgActive] = ImVec4(.49f, .558f, .638f, .310f);
+        style.Colors[ImGuiCol_FrameBgHovered] = ImVec4(.49f, .558f, .638f, .310f);
+
+        ////
+
         tex1.loadFromFile("test.png");
         tex2.loadFromFile("test2.png");
 
@@ -137,75 +120,34 @@ namespace Dawn
 
         ImGui::SetNextWindowSize(ImVec2(400, getWindow().getHeight()));
         ImGui::SetNextWindowPos(ImVec2(0, 0));
-        m_sceneHierarchyPanel.drawPanel();
+        m_sceneHierarchyPanel.draw();
+
+        ImGui::SetNextWindowSize(ImVec2(400, getWindow().getHeight()));
+        ImGui::SetNextWindowPos(ImVec2(getWindow().getWidth() - 400, 0));
+        m_inspectorPanel.draw(m_sceneHierarchyPanel.getSelectedEntity());
 
         //TODO: Resizing doesn't completely work and can glitch out after resizing the window
         //TODO: Resize frame buffer
-        ImGui::SetNextWindowSize(ImVec2(getWindow().getWidth(), getWindow().getHeight()));
-        ImGui::Begin("Main Window", NULL, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus);
-        ImGui::SetWindowPos(ImVec2(0, 0));
-
-        //MENU BAR
-        ImVec2 menuBarSize;
-        if (ImGui::BeginMenuBar()) {
-            menuBarSize = ImGui::GetWindowSize();
-            if (ImGui::BeginMenu("File")) {
-                if (ImGui::BeginMenu("Open")) {
-                    if (ImGui::MenuItem("test")) {
-                        DAWN_LOG("Opened something");
-                    }
-                    ImGui::EndMenu();
-                }
-                ImGui::EndMenu();
-            }
-            ImGui::EndMenuBar();
-        }
-
-        //LEFT PANEL
-        DrawSplitter(false, 10, &leftPanelSizeLeft, &leftPanelSizeRight, 400, 0);
-        ImGui::BeginChild("Left Panel", ImVec2(leftPanelSizeLeft, getWindow().getHeight() - menuBarSize.y), true);
-        ImGui::DragFloat("camera zoom", &zoom, 0.1f, 0.0f, 10.0f, NULL, 1.f);
-
-        auto& ptransform = scene.getComponent<Dawn::TransformComponent>(parentsParent);
-        ImGui::DragFloat3("parentsParent position", (float*)&ptransform.position, 0.1f, -10.0f, 10.0f, NULL, 1.f);
-        ImGui::DragFloat("parentsParent rotation", &ptransform.rotation, 0.1f, 0.f, 6.28f, NULL, 1.f);
-        ImGui::DragFloat3("parentsParent scale", (float*)&ptransform.scale, 0.1f, -10.0f, 10.0f, NULL, 1.f);
-
-        auto& transform = scene.getComponent<Dawn::TransformComponent>(parent);
-        ImGui::DragFloat3("parent position", (float*)&transform.position, 0.1f, -10.0f, 10.0f, NULL, 1.f);
-        ImGui::DragFloat("parent rotation", &transform.rotation, 0.1f, 0.f, 6.28f, NULL, 1.f);
-        ImGui::DragFloat3("parent scale", (float*)&transform.scale, 0.1f, -10.0f, 10.0f, NULL, 1.f);
-
-        std::string fps = "FPS: " + std::to_string(1.0f / Dawn::Time::deltaTime);
-        ImGui::TextColored(ImVec4(1, 0, 0, 1), fps.c_str());
-
-        std::string memory = "Heap Memory Allocated: " + std::to_string(Dawn::Memory::GetCurrentlyAllocated()) + " bytes";
-        ImGui::Text(memory.c_str());
-        std::string allocations = "Total Allocations: " + std::to_string(Dawn::Memory::GetAllocations());
-        ImGui::Text(allocations.c_str());
-
-        for (auto scopeTime : Dawn::ProfileTimer::s_scopeTimes) {
-            std::string display = std::to_string(scopeTime.time) + "s || " + scopeTime.name;
-            ImGui::Text(display.c_str());
-        }
-        Dawn::ProfileTimer::s_scopeTimes.clear();
-        ImGui::EndChild();
-
-        ImGui::SameLine();
-        ImGui::BeginChild("Right Panel", ImVec2(getWindow().getWidth() - leftPanelSizeLeft - 20 - 5, getWindow().getHeight() - menuBarSize.y), true);
+        ImGui::SetNextWindowSize(ImVec2(getWindow().getWidth() - 400 - 400, getWindow().getHeight()));
+        ImGui::Begin("Viewport", NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus);
+        ImGui::SetWindowPos(ImVec2(400, 0));
 
         viewportPanelSize = ImGui::GetContentRegionAvail();
         ImGui::Image((void*)fb.getColorTextureHandle(), viewportPanelSize, ImVec2(0, 1), ImVec2(1, 0));
-
-        ImGui::EndChild();
 
         ImGui::End();  //Main Window
 
         ImGui::PopStyleVar(2);
 
+        ImGui::SetNextWindowSize(ImVec2(400, 75));
+        ImGui::SetNextWindowPos(ImVec2(getWindow().getWidth() / 2 - 200, 1500));
+        ImGui::Begin("Temp Window");
+        ImGui::DragFloat("camera zoom", &zoom, 0.1f, 0.1f, 100.0f, NULL, 1.f);
+        ImGui::End();
+
         //DEMO WINDOW
-        static bool show = true;
-        ImGui::ShowDemoWindow(&show);
+        // static bool show = true;
+        // ImGui::ShowDemoWindow(&show);
     }
 
     void DawnEditor::onClose()

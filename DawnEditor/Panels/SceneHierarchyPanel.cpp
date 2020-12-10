@@ -5,14 +5,11 @@ namespace Dawn
     SceneHierarchyPanel::SceneHierarchyPanel(Scene* scene)
         : m_activeScene(scene){};
 
-    void SceneHierarchyPanel::drawPanel()
+    void SceneHierarchyPanel::draw()
     {
-        ImGui::Begin("Scene Hierarchy Panel");
+        ImGui::Begin("Scene Hierarchy Panel", NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus);
 
         std::set<Entity> entities = m_activeScene->getRegistry()->getAllEntitiesSet();
-        // for (auto& e : m_activeScene->getRegistry()->getAllEntitiesSet()) {
-        //     drawEntityTreeNode(e);
-        // }
 
         auto it = entities.begin();
         while (it != entities.end()) {
@@ -31,8 +28,10 @@ namespace Dawn
             flags |= ImGuiTreeNodeFlags_Selected;
 
         bool open;
+        bool hasChildren = m_activeScene->hasComponent<ParentComponent>(e);
 
         if (draw) {
+            ImGui::SetNextTreeNodeOpen(hasChildren, ImGuiCond_FirstUseEver);
             open = ImGui::TreeNodeEx((void*)e, flags, m_activeScene->getComponent<TagComponent>(e).tag.c_str());
             if (ImGui::IsItemClicked()) {
                 m_selectedEntity = e;

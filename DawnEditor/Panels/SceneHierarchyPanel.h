@@ -9,7 +9,12 @@ namespace Dawn
        public:
         SceneHierarchyPanel(Scene* scene);
 
-        void drawPanel();
+        void draw();
+
+        Entity getSelectedEntity()
+        {
+            return m_selectedEntity;
+        }
 
        private:
         void drawEntityTreeNode(Entity e, std::set<Entity>& entitySet, bool draw = true);

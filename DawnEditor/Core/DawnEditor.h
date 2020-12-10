@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Dawn/Dawn.h"
+#include "Panels/InspectorPanel.h"
 #include "Panels/SceneHierarchyPanel.h"
 
 namespace Dawn
@@ -33,7 +34,9 @@ namespace Dawn
         float leftPanelSizeRight = 1920 - 440;
 
         ImVec2 viewportPanelSize = ImVec2(0, 0);
-        Dawn::SceneHierarchyPanel m_sceneHierarchyPanel;
+
+        SceneHierarchyPanel m_sceneHierarchyPanel;
+        InspectorPanel m_inspectorPanel;
     };
 
 }  // namespace Dawn
