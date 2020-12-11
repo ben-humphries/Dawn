@@ -19,7 +19,8 @@ namespace Dawn
         Entity addEntity()
         {
             Entity e = m_registry.addEntity();
-            m_registry.addComponent<TagComponent>(e);
+            addComponent<TagComponent>(e);
+            addComponent<TransformComponent>(e);
             return e;
         }
 

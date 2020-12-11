@@ -5,6 +5,7 @@ set(SRC_FILES ${SRC_FILES}
 
     Panels/SceneHierarchyPanel.cpp
     Panels/InspectorPanel.cpp
+    
 )
 
 add_executable(DawnEditor ${SRC_FILES})

@@ -164,10 +164,17 @@ namespace Dawn
 
                 delete componentList[componentIndex];
 
+                int lastIndex = componentList.size() - 1;
                 componentList[componentIndex] = componentList[componentList.size() - 1];  // copy last component pointer into current index
                 componentList.pop_back();
 
                 m_entityIndexMaps[componentId].erase(e);
+                //find entry in map corresponding to the last component we moved and update the index mapping
+                for (auto it = m_entityIndexMaps[componentId].begin(); it != m_entityIndexMaps[componentId].end(); it++) {
+                    if (it->second == lastIndex) {
+                        m_entityIndexMaps[componentId][it->first] = componentIndex;
+                    }
+                }
                 m_entityBitsets[e][componentId] = false;
             }
         }

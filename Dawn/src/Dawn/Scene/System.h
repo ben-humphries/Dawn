@@ -1,8 +1,6 @@
 #pragma once
 #include "DawnPCH.h"
-
 #include "ECS/ECSSystem.h"
-
 #include "Render/Renderer2D.h"
 
 //TODO: Clean up the initializers for these classes. There is probably a way not to require them here.
@@ -41,8 +39,8 @@ namespace Dawn
                                                      GetRotationMatrix(axis, parentTransform.rotation),
                                                      GetScaleMatrix(parentTransform.scale)) *
                                       modelMatrix;
-                        current = childComponent.parent;
                     }
+                    current = childComponent.parent;
                 }
 
                 Renderer2D::DrawQuad(modelMatrix, spriteRenderer.color, spriteRenderer.texture);
@@ -63,6 +61,8 @@ namespace Dawn
                 if (cameraComponent.primary)
                     return cameraComponent.camera;
             }
+
+            return nullptr;
         }
     };
-};
+};  // namespace Dawn
