@@ -4,13 +4,14 @@
 #include "ECS/ECSSystem.h"
 #include "Render/Camera.h"
 #include "System.h"
+#include "Core/Event.h"
 
 namespace Dawn
 {
     class Scene
     {
        public:
-        Scene();
+        Scene(float aspectRatio = 800.0 / 600.0);
 
         void onUpdate();
 
@@ -95,5 +96,7 @@ namespace Dawn
 
         RenderSystem* m_renderSystem;
         CameraSystem* m_cameraSystem;
+
+        void onWindowResize(const Event& e);
     };
 }  // namespace Dawn

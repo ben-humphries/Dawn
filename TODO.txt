@@ -1,0 +1,1 @@
+- Fix some magic numbers in default window creation, scene camera creation. Both are 800, 600, should be linked somehow.

@@ -12,7 +12,7 @@ namespace Dawn
     class OrthographicCamera : public Camera
     {
        public:
-        OrthographicCamera(float left, float right, float bot, float top);
+        OrthographicCamera(float aspectRatio, float size);
 
         void setPosition(const Vec3& position)
         {
@@ -26,7 +26,16 @@ namespace Dawn
             recalculateMatrices();
         }
 
-        void setProjection(float left, float right, float bot, float top);
+        void setSize(float size)
+        {
+            m_size = size;
+            setProjection(-m_aspectRatio * m_size, m_aspectRatio * m_size, -1.0 * m_size, 1.0 * m_size);
+        }
+        void setAspectRatio(float aspectRatio)
+        {
+            m_aspectRatio = aspectRatio;
+            setProjection(-m_aspectRatio * m_size, m_aspectRatio * m_size, -1.0 * m_size, 1.0 * m_size);
+        }
 
         const Mat4& getViewMatrix() const
         {
@@ -45,6 +54,7 @@ namespace Dawn
 
        private:
         void recalculateMatrices();
+        void setProjection(float left, float right, float bot, float top);
 
         Mat4 m_viewMatrix;
         Mat4 m_projectionMatrix;
@@ -52,6 +62,9 @@ namespace Dawn
 
         Vec3 m_position;
         float m_rotation;
+
+        float m_aspectRatio;
+        float m_size;
     };
 
     class PerspectiveCamera : public Camera

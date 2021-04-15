@@ -104,8 +104,10 @@ namespace Dawn
 
             float aspectRatio = viewportPanelSize.x / viewportPanelSize.y;
             Dawn::OrthographicCamera* mainCamera = scene.getMainCamera();
-            if (mainCamera)
-                mainCamera->setProjection(-aspectRatio * zoom, aspectRatio * zoom, -1.0 * zoom, 1.0 * zoom);
+            if (mainCamera) {
+                mainCamera->setAspectRatio(aspectRatio);
+                mainCamera->setSize(zoom);
+            }
         }
 
         fb.bind();

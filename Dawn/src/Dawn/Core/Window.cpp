@@ -127,6 +127,20 @@ namespace Dawn
         glClear(GL_COLOR_BUFFER_BIT);
     }
 
+    void Window::setWidth(int width)
+    {
+        m_width = width;
+        glfwSetWindowSize(m_window, m_width, m_height);
+        EventHandler::Submit(WindowResizedEvent(m_width, m_height));
+    }
+
+    void Window::setHeight(int height)
+    {
+        m_height = height;
+        glfwSetWindowSize(m_window, m_width, m_height);
+        EventHandler::Submit(WindowResizedEvent(m_width, m_height));
+    }
+
     int Window::getWidth()
     {
         return m_width;

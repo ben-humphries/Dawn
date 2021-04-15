@@ -13,9 +13,7 @@ class Playground : public Dawn::Application
 
     Playground()
     {
-        const float aspectRatio = 1920 / 1920;
-        const float zoom = 10.0f;
-        scene.getMainCamera()->setProjection(-aspectRatio * zoom, aspectRatio * zoom, -1.0 * zoom, 1.0 * zoom);
+        scene.getMainCamera()->setSize(2.0);
 
         tex1.loadFromFile("test.png");
         tex2.loadFromFile("test2.png");

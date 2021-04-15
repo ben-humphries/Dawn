@@ -11,7 +11,7 @@ namespace Dawn
     class Window
     {
        public:
-        Window(int width = 1920, int height = 1920,
+        Window(int width = 800, int height = 600,
                const std::string& name = "Dawn App");
         ~Window();
 
@@ -25,6 +25,9 @@ namespace Dawn
         void display();
 
         void clear();
+
+        void setWidth(int width);
+        void setHeight(int height);
 
         int getWidth();
         int getHeight();

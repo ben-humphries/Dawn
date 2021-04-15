@@ -2,13 +2,13 @@
 
 namespace Dawn
 {
-    OrthographicCamera::OrthographicCamera(float left, float right, float bot, float top)
+    OrthographicCamera::OrthographicCamera(float aspectRatio, float size)
         : m_position(0, 0, 0), m_rotation(0)
     {
         m_viewMatrix = Mat4();
-        m_projectionMatrix = Ortho(left, right, bot, top);
-
-        m_viewProjectionMatrix = m_projectionMatrix * m_viewMatrix;
+        m_aspectRatio = aspectRatio;
+        m_size = size;
+        setProjection(-m_aspectRatio * m_size, m_aspectRatio * m_size, -1.0 * m_size, 1.0 * m_size);
     }
 
     void OrthographicCamera::setProjection(float left, float right, float bot, float top)
