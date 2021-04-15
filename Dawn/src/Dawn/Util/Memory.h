@@ -1,6 +1,8 @@
 #pragma once
 #include "DawnPCH.h"
 
+#ifndef _MSC_VER
+
 namespace Dawn
 {
     class Memory
@@ -32,6 +34,8 @@ namespace Dawn
         inline static size_t s_allocations = 0;
     };
 }  // namespace Dawn
+
+#endif
 
 #if FALSE  //Disable overloading for now
 

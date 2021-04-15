@@ -1,5 +1,7 @@
 #include "Util.h"
 
+#ifdef __GNUC__ || __MINGW32__ || __MINGW64__
+
 #include <unistd.h>
 
 namespace Dawn
@@ -14,3 +16,5 @@ namespace Dawn
         return currentDir;
     }
 }  // namespace Dawn
+
+#endif

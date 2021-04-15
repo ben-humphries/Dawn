@@ -122,13 +122,13 @@ namespace Dawn
 
             ImGui_ImplOpenGL3_Init("#version 330 core");
 
-            EventHandler::Listen(EventType::MousePressed, BIND_EVENT_MEMBER_FN(ImGuiMousePressedCallback));
-            EventHandler::Listen(EventType::MouseReleased, BIND_EVENT_MEMBER_FN(ImGuiMouseReleasedCallback));
-            EventHandler::Listen(EventType::MouseMoved, BIND_EVENT_MEMBER_FN(ImGuiMouseMovedCallback));
-            EventHandler::Listen(EventType::MouseScrolled, BIND_EVENT_MEMBER_FN(ImGuiMouseScrolledCallback));
-            EventHandler::Listen(EventType::KeyPressed, BIND_EVENT_MEMBER_FN(ImGuiKeyPressedCallback));
-            EventHandler::Listen(EventType::KeyReleased, BIND_EVENT_MEMBER_FN(ImGuiKeyReleasedCallback));
-            EventHandler::Listen(EventType::CharTyped, BIND_EVENT_MEMBER_FN(ImGuiCharTypedCallback));
+            EventHandler::Listen(EventType::MousePressed, BIND_EVENT_MEMBER_FN(DawnImGuiContext::ImGuiMousePressedCallback));
+            EventHandler::Listen(EventType::MouseReleased, BIND_EVENT_MEMBER_FN(DawnImGuiContext::ImGuiMouseReleasedCallback));
+            EventHandler::Listen(EventType::MouseMoved, BIND_EVENT_MEMBER_FN(DawnImGuiContext::ImGuiMouseMovedCallback));
+            EventHandler::Listen(EventType::MouseScrolled, BIND_EVENT_MEMBER_FN(DawnImGuiContext::ImGuiMouseScrolledCallback));
+            EventHandler::Listen(EventType::KeyPressed, BIND_EVENT_MEMBER_FN(DawnImGuiContext::ImGuiKeyPressedCallback));
+            EventHandler::Listen(EventType::KeyReleased, BIND_EVENT_MEMBER_FN(DawnImGuiContext::ImGuiKeyReleasedCallback));
+            EventHandler::Listen(EventType::CharTyped, BIND_EVENT_MEMBER_FN(DawnImGuiContext::ImGuiCharTypedCallback));
         }
 
         void onUpdate()
