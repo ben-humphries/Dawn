@@ -37,6 +37,8 @@ namespace Dawn
 
         OrthographicCamera* mainCamera = m_cameraSystem->getMainCamera();
 
+        m_cameraSystem->onUpdate();
+
         if (mainCamera) {
             //These Renderer2D functions could be contained within RenderSystem
             Renderer2D::StartFrame(*mainCamera);

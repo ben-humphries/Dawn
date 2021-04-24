@@ -13,7 +13,7 @@ namespace Dawn
 
     void OrthographicCamera::setProjection(float left, float right, float bot, float top)
     {
-        m_projectionMatrix = Ortho(left, right, bot, top);
+        m_projectionMatrix = Ortho(left, right, bot, top, -1.0f, 1000.0f);
         m_viewProjectionMatrix = m_projectionMatrix * m_viewMatrix;
     }
 

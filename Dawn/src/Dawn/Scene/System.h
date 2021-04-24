@@ -54,6 +54,19 @@ namespace Dawn
         CameraSystem(EntityRegistry* registry)
             : System(registry){};
 
+        void onUpdate()
+        {
+            for (auto e : m_entities) {
+                if (m_registry->hasComponent<TransformComponent>(e)) {
+                    auto& transformComponent = m_registry->getComponent<TransformComponent>(e);
+                    auto& cameraComponent = m_registry->getComponent<CameraComponent>(e);
+
+                    cameraComponent.camera->setPosition(transformComponent.position);
+                    cameraComponent.camera->setRotation(transformComponent.rotation);
+                }
+            }
+        }
+
         OrthographicCamera* getMainCamera()
         {
             for (auto e : m_entities) {

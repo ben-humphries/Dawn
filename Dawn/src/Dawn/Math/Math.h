@@ -69,7 +69,7 @@ namespace Dawn
     float Dot(const Vec3& a, const Vec3& b);
     Vec3 Cross(const Vec3& a, const Vec3& b);
 
-    Vec2 Noramlize(const Vec2& v);
+    Vec2 Normalize(const Vec2& v);
     Vec3 Normalize(const Vec3& v);
     Vec4 Normalize(const Vec4& v);
 
