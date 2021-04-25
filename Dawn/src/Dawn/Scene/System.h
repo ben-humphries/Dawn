@@ -67,7 +67,7 @@ namespace Dawn
        private:
         static bool entitySortFunc(const std::pair<Dawn::Entity, float>& a, const std::pair<Dawn::Entity, float>& b)
         {
-            return (a.second <= b.second);
+            return (a.second < b.second);
         }
     };
 
