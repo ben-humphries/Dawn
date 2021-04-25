@@ -15,14 +15,29 @@ namespace Dawn
             : System(registry){};
         void onUpdate()
         {
+            std::vector<std::pair<Dawn::Entity, float>> sort_entities;
             for (auto e : m_entities) {
+                auto& transform = m_registry->getComponent<TransformComponent>(e);
+                sort_entities.push_back({e, transform.position.z});
+            }
+
+            std::sort(sort_entities.begin(), sort_entities.end(), entitySortFunc);
+
+            //This chooses a sprite to render on top when on the exact same z-level.
+            float zSkin = 0.0001;
+            for (auto pair : sort_entities) {
+                auto e = pair.first;
+
                 auto& transform = m_registry->getComponent<TransformComponent>(e);
                 auto& spriteRenderer = m_registry->getComponent<SpriteRendererComponent>(e);
 
                 const Vec3 axis = Vec3(0, 0, 1);
 
+                Vec3 position = transform.position;
+                position.z += zSkin;
+
                 Mat4 modelMatrix = GetModelMatrix(
-                    GetTranslationMatrix(transform.position),
+                    GetTranslationMatrix(position),
                     GetRotationMatrix(axis, transform.rotation),
                     GetScaleMatrix(transform.scale));
 
@@ -44,7 +59,15 @@ namespace Dawn
                 }
 
                 Renderer2D::DrawQuad(modelMatrix, spriteRenderer.color, spriteRenderer.texture);
+
+                zSkin += 0.0001;
             }
+        }
+
+       private:
+        static bool entitySortFunc(const std::pair<Dawn::Entity, float>& a, const std::pair<Dawn::Entity, float>& b)
+        {
+            return (a.second <= b.second);
         }
     };
 

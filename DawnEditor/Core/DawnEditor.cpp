@@ -18,10 +18,15 @@ namespace Dawn
         style.Colors[ImGuiCol_FrameBgActive] = ImVec4(.49f, .558f, .638f, .310f);
         style.Colors[ImGuiCol_FrameBgHovered] = ImVec4(.49f, .558f, .638f, .310f);
 
-        ////
+        //WINDOW
+
+        this->getWindow().setWidth(1920);
+        this->getWindow().setHeight(1080);
+
+        //
 
         tex1.loadFromFile("test.png");
-        tex2.loadFromFile("test2.png");
+        tex2.loadFromFile("test.png");
 
         parentsParent = scene.addEntity();
         scene.addComponent<Dawn::TransformComponent>(parentsParent);
@@ -39,6 +44,9 @@ namespace Dawn
         parentSprite.texture = &tex1;
         auto& pTag = scene.getComponent<Dawn::TagComponent>(parent);
         pTag.tag = "parent";
+        auto& pTransform = scene.getComponent<Dawn::TransformComponent>(parent);
+        pTransform.position.z = -0.1;
+        pTransform.position.x = 0.5;
 
         scene.makeEntityChild(parent, parentsParent);
 

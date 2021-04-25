@@ -9,6 +9,8 @@
 #include <set>
 #include <string>
 #include <cstdint>
+#include <algorithm>
+#include <time.h>
 
 #include <cstdlib>
 #include <iostream>

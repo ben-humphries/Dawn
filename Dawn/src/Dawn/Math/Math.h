@@ -87,4 +87,6 @@ namespace Dawn
         const Mat4& translationMatrix,
         const Mat4& rotationMatrix,
         const Mat4& scaleMatrix);
+
+    float RandRange(float low, float high);
 }

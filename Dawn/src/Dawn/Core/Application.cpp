@@ -18,6 +18,7 @@ namespace Dawn
 
     Application::Application()
     {
+        srand(time(NULL));
         m_window = std::make_shared<Window>();
         EventHandler::Listen(EventType::WindowClosed, BIND_EVENT_MEMBER_FN(Application::onWindowClose));
 

@@ -1,1 +1,11 @@
 - Fix some magic numbers in default window creation, scene camera creation. Both are 800, 600, should be linked somehow.
+ - Build on Linux (change "glfw/glfw3.h" to "GLFW/glfw3.h")
+ - no way to tell if Texture::loadFromFile failed
+ - no +=, -=, etc operators on Vec3
+ - no standard output for Vec3
+ - Vec3::zero and standard normals would be useful
+ - Vec distance function
+ - Texture loading only works with 32 bit depth textures
+ - Math.Abs, Math.Clamp, Math.Lerp, Sqrt
+ - Random numbers
+ - Screen to world coords, world to screen

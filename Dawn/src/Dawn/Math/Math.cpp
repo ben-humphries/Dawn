@@ -373,4 +373,9 @@ namespace Dawn
     {
         return translation_matrix * rotation_matrix * scale_matrix;
     }
+
+    float RandRange(float low, float high)
+    {
+        return low + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (high - low)));
+    }
 }
