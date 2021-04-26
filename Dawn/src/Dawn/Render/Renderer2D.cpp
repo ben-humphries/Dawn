@@ -221,6 +221,10 @@ namespace Dawn
         currentBatchTextures = 1;
         currentVertexPtr = vertices;
         currentBatches++;
+
+        for (int i = 0; i < MAX_TEXTURES; i++) {
+            currentBatchTextureArray[i] = nullptr;
+        }
     }
 
     void Renderer2D::EndFrame()
