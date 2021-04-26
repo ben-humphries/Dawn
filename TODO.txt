@@ -9,3 +9,4 @@
  - Math.Abs, Math.Clamp, Math.Lerp, Sqrt
  - Random numbers
  - Screen to world coords, world to screen
+ - round float
