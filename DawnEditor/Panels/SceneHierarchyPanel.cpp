@@ -2,6 +2,8 @@
 
 namespace Dawn
 {
+    bool entityRightClicked = false;
+
     SceneHierarchyPanel::SceneHierarchyPanel(Scene* scene)
         : m_activeScene(scene){};
 
@@ -15,6 +17,28 @@ namespace Dawn
         while (it != entities.end()) {
             drawEntityTreeNode(*it, entities);
             it = entities.begin();
+        }
+
+        if (entityRightClicked) {
+            ImGui::OpenPopup("Entity Right Click Menu");
+        }
+
+        if (ImGui::BeginPopup("Entity Right Click Menu")) {
+            if (ImGui::MenuItem("Delete Entity")) {
+                m_activeScene->deleteEntity(m_selectedEntity);
+                m_selectedEntity = 0;
+            }
+            ImGui::EndPopup();
+            entityRightClicked = false;
+        }
+
+        ImGui::Separator();
+        ImGui::Dummy(ImVec2(0, 5.0f));
+
+        int buttonOffset = ImGui::GetContentRegionAvail().x / 4;
+        ImGui::SetCursorPosX(buttonOffset);
+        if (ImGui::Button("Add Entity", ImVec2(buttonOffset * 2, ImGui::GetFontSize() * 1.5))) {
+            m_activeScene->addEntity();
         }
 
         ImGui::End();
@@ -35,6 +59,9 @@ namespace Dawn
             open = ImGui::TreeNodeEx((void*)e, flags, m_activeScene->getComponent<TagComponent>(e).tag.c_str());
             if (ImGui::IsItemClicked()) {
                 m_selectedEntity = e;
+            } else if (ImGui::IsItemClicked(1)) {
+                m_selectedEntity = e;
+                entityRightClicked = true;
             }
         }
 

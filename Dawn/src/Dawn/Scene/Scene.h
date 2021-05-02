@@ -36,6 +36,26 @@ namespace Dawn
                 }
             }
 
+            //If entity has Child component, remove reference to this entity from parent's list.
+            if (m_registry.hasComponent<ChildComponent>(e)) {
+                auto& childComponent = m_registry.getComponent<ChildComponent>(e);
+
+                auto& parentComponent = m_registry.getComponent<ParentComponent>(childComponent.parent);
+
+                auto it = parentComponent.children.begin();
+                while (it != parentComponent.children.end()) {
+                    if (*it == e) {
+                        it = parentComponent.children.erase(it);
+                        break;
+                    }
+                    it++;
+                }
+
+                if (parentComponent.children.size() == 0) {
+                    deleteComponent<ParentComponent>(childComponent.parent);
+                }
+            }
+
             m_registry.deleteEntity(e);
             m_systemRegistry.entityDeleted(e);
         }

@@ -10,3 +10,4 @@
  - Random numbers
  - Screen to world coords, world to screen
  - round float
+ - problem in editor when deleting main camera entity
